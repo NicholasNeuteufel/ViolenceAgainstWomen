@@ -1,4 +1,4 @@
-##Data from UN Women: 
+##Data from UN Women, compiled by Nick Neuteufel. https://www.dropbox.com/s/rfjlmgzueb4klrb/AfricanVAW.csv?dl=0
 
 data <- read.csv(file="AfricanVAW.csv", h=T, sep=",")
 data$Country <- as.character(data$Country)
