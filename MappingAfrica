@@ -1,0 +1,36 @@
+##Data from UN Women: 
+
+data <- read.csv(file="AfricanVAW.csv", h=T, sep=",")
+data$Country <- as.character(data$Country)
+data$Country[data$Country=="DRC"] <- "Democratic Republic of Congo"
+
+##Mapping
+
+library(rworldmap)
+map <- joinCountryData2Map(data, nameJoinColumn="Country", joinCode="NAME", verbose=T)
+
+###Should get this response
+21 codes from your data successfully matched countries in the map
+0 codes from your data failed to match with a country code in the map
+     failedCodes failedCountries
+223 codes from the map weren't represented in your data
+###
+
+png("MapAfrica.png", width=800, height=450, bg="white")
+par(mai=c(0,0,0.2,0), xaxs="i",yaxs="i")
+
+map.score.zoom <- mapCountryData(map,
++ nameColumnToPlot="IPV.Either.Life",
++ addLegend=F, 
++ numCats=5, catMethod="quantiles",
++ missingCountryCol="white",
++ oceanCol="lightblue",
++ colourPalette="heat", borderCol="gray",
++ mapRegion="Africa", 
++ mapTitle = "Percent of women affected by intimate partner violence, both sexual & physical, in reporting African countries")
+
+do.call(addMapLegend, c(map.score.zoom, legendWidth=0.5, legendMar=2))
+
+mtext("Map made by Nick Neuteufel with rworldmap & UN data  ", line=-4, side=1, adj=1, cex=0.8)
+
+dev.off()
