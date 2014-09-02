@@ -1,8 +1,17 @@
-##Data from UN Women, compiled by Nick Neuteufel. https://www.dropbox.com/s/rfjlmgzueb4klrb/AfricanVAW.csv?dl=0
+##Mapping violence against women worldwide. Example continent is Africa.
 
-data <- read.csv(file="AfricanVAW.csv", h=T, sep=",")
+##Data from UN Women, compiled by Nick Neuteufel. Africa (example) data: https://www.dropbox.com/s/28idctnnnfokfus/AfricanVAW--Neuteufel.csv?dl=0
+
+
+##Load data
+data <- read.csv(file="AfricanVAW--Neuteufel.csv", h=T, sep=",")
+
+##must-do
 data$Country <- as.character(data$Country)
+
+##pre-emptive change to name, to satisfy rworldmap. If you skip this, you will get failure in joinCountryData2Map
 data$Country[data$Country=="DRC"] <- "Democratic Republic of Congo"
+
 
 ##Mapping
 
@@ -34,3 +43,11 @@ do.call(addMapLegend, c(map.score.zoom, legendWidth=0.5, legendMar=2))
 mtext("Map made by Nick Neuteufel with rworldmap & UN data  ", line=-4, side=1, adj=1, cex=0.8)
 
 dev.off()
+
+##Data now available for Oceania: https://www.dropbox.com/s/z83oxqdunbf0zsd/OceaniaVAW--Neuteufel.csv?dl=0
+###Oceania response to joinCountryData2Map should be:
+9 codes from your data successfully matched countries in the map
+0 codes from your data failed to match with a country code in the map
+     failedCodes failedCountries
+235 codes from the map weren't represented in your data
+###
