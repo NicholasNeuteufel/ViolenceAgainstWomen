@@ -51,3 +51,6 @@ dev.off()
      failedCodes failedCountries
 235 codes from the map weren't represented in your data
 ###
+
+##Europe: https://www.dropbox.com/s/d549rosneraqlki/EuropeVAW--Neuteufel.csv?dl=0
+##Europe response should be 26 codes successful; 218 not represented.
