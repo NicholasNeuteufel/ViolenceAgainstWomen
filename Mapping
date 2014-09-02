@@ -1,7 +1,7 @@
 ##Mapping violence against women worldwide. Example continent is Africa.
 
 ##Data from UN Women, compiled by Nick Neuteufel. Africa (example) data: https://www.dropbox.com/s/28idctnnnfokfus/AfricanVAW--Neuteufel.csv?dl=0
-
+##See end for data from other continents/world regions
 
 ##Load data
 data <- read.csv(file="AfricanVAW--Neuteufel.csv", h=T, sep=",")
@@ -54,3 +54,6 @@ dev.off()
 
 ##Europe: https://www.dropbox.com/s/d549rosneraqlki/EuropeVAW--Neuteufel.csv?dl=0
 ##Europe response should be 26 codes successful; 218 not represented.
+
+##Asia: https://www.dropbox.com/s/2rgiercrf2ice8h/AsiaVAW--Neuteufel.csv?dl=0
+##Asia response: 13 successful codes; 231 not represented.
