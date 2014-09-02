@@ -19,10 +19,10 @@ library(rworldmap)
 map <- joinCountryData2Map(data, nameJoinColumn="Country", joinCode="NAME", verbose=T)
 
 ###Should get this response
-22 codes from your data successfully matched countries in the map
+23 codes from your data successfully matched countries in the map
 0 codes from your data failed to match with a country code in the map
      failedCodes failedCountries
-222 codes from the map weren't represented in your data
+221 codes from the map weren't represented in your data
 ###
 
 png("MapAfrica.png", width=800, height=450, bg="white")
