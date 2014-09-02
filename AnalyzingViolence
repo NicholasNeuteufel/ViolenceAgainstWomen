@@ -1,0 +1,17 @@
+#Convert country names to ISO2 codes to easily download World Development Indicators (WDI) data
+#Data here is "total"
+
+library(countrycode)
+
+total$ISO2 <- countrycode(sourcevar=total$Country, origin="country.name", destination="iso2c", warn=T)
+
+#Need to manually do 2 countries
+total$ISO2[total$Country=="Samoa"] <- "WS"
+total$ISO2[total$Country=="Namibia"] <- "NA"
+
+#Add WDI data from WDI package
+
+library(WDI)
+
+#It ends up not working for Namibia, so I just drop the sample to 90 countries
+new.total <- subset(total, Country != "Namibia")
