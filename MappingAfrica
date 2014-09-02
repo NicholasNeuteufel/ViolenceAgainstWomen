@@ -27,7 +27,7 @@ map.score.zoom <- mapCountryData(map,
 + oceanCol="lightblue",
 + colourPalette="heat", borderCol="gray",
 + mapRegion="Africa", 
-+ mapTitle = "Percent of women affected by intimate partner violence, both sexual & physical, in reporting African countries")
++ mapTitle = "Percent of women affected by intimate partner violence, either sexual or physical, in reporting African countries")
 
 do.call(addMapLegend, c(map.score.zoom, legendWidth=0.5, legendMar=2))
 
