@@ -50,9 +50,6 @@ LaborForceParticipationRatio <- WDI(country=new.total$ISO2, indicator="SL.TLF.CA
 #Expected primary completion rate, female (% of population at theoretical entrance age)
 ExpectedPrimaryCompletion <- WDI(country=new.total$ISO2, indicator="SE.PRM.EPCR.FE.ZS", start=2010, end=2010, extra=F, cache=NULL)
 
-#MICS: Gini coefficient of average years of schooling. Age 15+. Rural
-RuralEduDivide <- WDI(country=new.total$ISO2, indicator="HH.MICS.YRS.15UP.GIN.R", start=2010, end=2010, extra=F, cache=NULL)
-
 #Gini index
 GiniIndex <- WDI(country=new.total$ISO2, indicator="SI.POV.GINI", start=2010, end=2010, extra=F, cache=NULL)
 
@@ -90,7 +87,6 @@ new.total$Female.PostSecondaryEdu <- Female.PostSecondaryEdu$UIS.FEP.4
 new.total$ExpectedPrimaryCompletion <- ExpectedPrimaryCompletion$SE.PRM.EPCR.FE.ZS
 new.total$Female.LaborForcePercentage <- Female.LaborForcePercentage$SL.TLF.TOTL.FE.ZS
 new.total$LaborForceParticipationRatio <- LaborForceParticipationRatio$SL.TLF.CACT.FM.ZS
-new.total$RuralEduDivide <- RuralEduDivide$HH.MICS.YRS.15UP.GIN.R
 new.total$GiniIndex <- GiniIndex$SI.POV.GINI
 new.total$AgEmploy <- AgEmploy$SL.AGR.EMPL.ZS
 
