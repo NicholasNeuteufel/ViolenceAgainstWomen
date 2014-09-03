@@ -59,6 +59,8 @@ GiniIndex <- WDI(country=new.total$ISO2, indicator="SI.POV.GINI", start=2010, en
 #Employment in agriculture (% of total employment)
 AgEmploy <- WDI(country=new.total$ISO2, indicator="SL.AGR.EMPL.ZS", start=2010, end=2010, extra=F, cache=NULL)
 
+##These scores are not working at the moment. Will work later.
+
 #Revised Combined Polity Score
 RevisedCombinedPolityScore <- WDI(country=new.total$ISO2, indicator="UPP.REV.POL.XQ", start=2010, end=2010, extra=F, cache=NULL)
 
@@ -73,3 +75,27 @@ CorruptionControl <- WDI(country=new.total$ISO2, indicator="CC.PER.RNK", start=2
 
 #Corruption Perceptions Index (rank)
 CorruptionPerception <- WDI(country=new.total$ISO2, indicator="GV.TI.RANK.IDX", start=2010, end=2010, extra=F, cache=NULL)
+
+#End non-working scores
+
+#Next task is to add the data to UN-Women data
+#This is necessary because WDI returns dataframes rather than vectors.
+
+new.total$GDP <- GDP.PPP.per.cap$NY.GDP.PCAP.PP.CD
+new.total$Health.Spending <- Health.Spending$SH.XPD.TOTL.ZS
+new.total$PrenatalCare <- PrenatalCare$SH.STA.ANVC.ZS
+new.total$Female.No.Education <- Female.No.Education$BAR.NOED.15UP.FE.ZS
+new.total$Female.Grade4Survival <- Female.Grade4Survival$UIS.SR.1.G4.F
+new.total$Female.PostSecondaryEdu <- Female.PostSecondaryEdu$UIS.FEP.4
+new.total$ExpectedPrimaryCompletion <- ExpectedPrimaryCompletion$SE.PRM.EPCR.FE.ZS
+new.total$Female.LaborForcePercentage <- Female.LaborForcePercentage$SL.TLF.TOTL.FE.ZS
+new.total$LaborForceParticipationRatio <- LaborForceParticipationRatio$SL.TLF.CACT.FM.ZS
+new.total$RuralEduDivide <- RuralEduDivide$HH.MICS.YRS.15UP.GIN.R
+new.total$GiniIndex <- GiniIndex$SI.POV.GINI
+new.total$AgEmploy <- AgEmploy$SL.AGR.EMPL.ZS
+
+#Saving my hard work
+write.csv(file="WithWDIGlobalData.csv", x=new.total)
+
+#Do correlations. Lots of NAs from WDI force '''use="complete.obs"'''
+cor(new.total$IPV.Either.Life, SOMETHING.FROM.ABOVE, use="complete.obs")
