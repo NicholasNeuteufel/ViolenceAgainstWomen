@@ -29,6 +29,9 @@ GDP.PPP.per.cap <- WDI(country=new.total$ISO2, indicator="NY.GDP.PCAP.PP.CD", st
 #Total health expenditure as a percentage of GDP
 Health.Spending <- WDI(country=new.total$ISO2, indicator="SH.XPD.TOTL.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
+#Pregnant women receiving prenatal care (%)
+PrenatalCare <- WDI(country=new.total$ISO2, indicator="SH.STA.ANVC.ZS", start=2013, end=2013, extra=F, cache=NULL)
+
 #Percentage of population (15+), 15+, female, no education
 Female.No.Education <- WDI(country=new.total$ISO2, indicator="BAR.NOED.15UP.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
@@ -52,3 +55,21 @@ RuralEduDivide <- WDI(country=new.total$ISO2, indicator="HH.MICS.YRS.15UP.GIN.R"
 
 #Gini index
 GiniIndex <- WDI(country=new.total$ISO2, indicator="SI.POV.GINI", start=2013, end=2013, extra=F, cache=NULL)
+
+#Employment in agriculture (% of total employment)
+AgEmploy <- WDI(country=new.total$ISO2, indicator="SL.AGR.EMPL.ZS", start=2013, end=2013, extra=F, cache=NULL)
+
+#Revised Combined Polity Score
+RevisedCombinedPolityScore <- WDI(country=new.total$ISO2, indicator="UPP.REV.POL.XQ", start=2013, end=2013, extra=F, cache=NULL)
+
+#Political Stability/No Violence (estimate)
+PoliticalStability <- WDI(country=new.total$ISO2, indicator="GV.POLI.ST.ES", start=2013, end=2013, extra=F, cache=NULL)
+
+#Political Stability and Absence of Violence/Terrorism: Percentile Rank
+PoliticalStabilityAbsenceViolence <- WDI(country=new.total$ISO2, indicator="PV.PER.RNK", start=2013, end=2013, extra=F, cache=NULL)
+
+#Control of Corruption: Percentile Rank
+CorruptionControl <- WDI(country=new.total$ISO2, indicator="CC.PER.RNK", start=2013, end=2013, extra=F, cache=NULL)
+
+#Corruption Perceptions Index (rank)
+CorruptionPerception <- WDI(country=new.total$ISO2, indicator="GV.TI.RANK.IDX", start=2013, end=2013, extra=F, cache=NULL)
