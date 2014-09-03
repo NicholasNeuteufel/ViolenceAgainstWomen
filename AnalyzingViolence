@@ -1,6 +1,8 @@
 #Convert country names to ISO2 codes to easily download World Development Indicators (WDI) data
 #Use WDI data to analyze correlates of gender and children violence
-#Data here are "total." See global data from Mapping for download link.
+#Data here are "total." Download here: https://www.dropbox.com/s/83hos4ry10fx234/GlobalData.csv?dl=0
+
+total <- read.csv(file="GlobalData.csv", h=T, sep=",")
 
 library(countrycode)
 
@@ -16,39 +18,37 @@ total$ISO2[total$Country=="Namibia"] <- "NA"
 library(WDI)
 
 #I will save you some pain pre-WDI data.
-
-#It ends up not working for Namibia, so I just drop the sample to 90 countries.
-#It's more than OK because the data for Namibia are from a city-only survey (Windhoek).
-
-new.total <- total[-14,]
-
-#Need to drop 2 more countries because they are not recognized WDI-wise. Now 88 countries
-new.total <- subset(new.total, new.total$ISO2 != "NA")
+#Need to drop 2 more countries because they are not recognized WDI-wise. Now 89 countries
+new.total <- subset(total, total$ISO2 != "NA")
 
 #Now for the data-scraping
 
 #I begin with per capita GDP, adjusted for purchasing power parity (PPP)
-new.total$GDP.PPP.per.cap <- WDI(country=new.total$ISO2, indicator="NY.GDP.PCAP.PP.CD", start=2013, end=2013, extra=F, cache=NULL)
+GDP.PPP.per.cap <- WDI(country=new.total$ISO2, indicator="NY.GDP.PCAP.PP.CD", start=2013, end=2013, extra=F, cache=NULL)
 
 #Total health expenditure as a percentage of GDP
-new.total$Health.Spending <- WDI(country=new.total$ISO2, indicator="SH.XPD.TOTL.ZS", start=2013, end=2013, extra=F, cache=NULL)
+Health.Spending <- WDI(country=new.total$ISO2, indicator="SH.XPD.TOTL.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
 #Percentage of population (15+), 15+, female, no education
-new.total$Female.No.Education <- WDI(country=new.total$ISO2, indicator="BAR.NOED.15UP.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
+Female.No.Education <- WDI(country=new.total$ISO2, indicator="BAR.NOED.15UP.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
 #Percentage of female students.  Post-secondary non-tertiary education
-new.total$Female.PostSecondaryEdu <- WDI(country=new.total$ISO2, indicator="UIS.FEP.4", start=2013, end=2013, extra=F, cache=NULL)
+Female.PostSecondaryEdu <- WDI(country=new.total$ISO2, indicator="UIS.FEP.4", start=2013, end=2013, extra=F, cache=NULL)
 
 #Survival rate to grade 4.  Female
-new.total$Female.Grade4Survival <- WDI(country=new.total$ISO2, indicator="UIS.SR.1.G4.F", start=2013, end=2013, extra=F, cache=NULL)
+Female.Grade4Survival <- WDI(country=new.total$ISO2, indicator="UIS.SR.1.G4.F", start=2013, end=2013, extra=F, cache=NULL)
 
 #Labor force, female (% of total labor force)
-new.total$Female.LaborForcePercentage <- WDI(country=new.total$ISO2, indicator="SL.TLF.TOTL.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
+Female.LaborForcePercentage <- WDI(country=new.total$ISO2, indicator="SL.TLF.TOTL.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
 #Ratio of female to male labor force participation rate (%)
-new.total$LaborForceParticipationRatio <- WDI(country=new.total$ISO2, indicator="SL.TLF.CACT.FM.ZS", start=2013, end=2013, extra=F, cache=NULL)
+LaborForceParticipationRatio <- WDI(country=new.total$ISO2, indicator="SL.TLF.CACT.FM.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
 #Expected primary completion rate, female (% of population at theoretical entrance age)
-new.total$ExpectedPrimaryCompletion <- WDI(country=new.total$ISO2, indicator="SE.PRM.EPCR.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
+ExpectedPrimaryCompletion <- WDI(country=new.total$ISO2, indicator="SE.PRM.EPCR.FE.ZS", start=2013, end=2013, extra=F, cache=NULL)
 
+#MICS: Gini coefficient of average years of schooling. Age 15+. Rural
+RuralEduDivide <- WDI(country=new.total$ISO2, indicator="HH.MICS.YRS.15UP.GIN.R", start=2013, end=2013, extra=F, cache=NULL)
 
+#Gini index
+GiniIndex <- WDI(country=new.total$ISO2, indicator="SI.POV.GINI", start=2013, end=2013, extra=F, cache=NULL)
