@@ -1,0 +1,56 @@
+set.seed(12)
+
+library(randomForest)
+
+#Download link for data: https://www.dropbox.com/s/ssqe5gbg7jyvrf1/WithWDIGlobalData.csv?dl=0
+data <- read.csv(file="WithWDIGlobalData.csv", h=T, sep=",")
+
+#Need data with non-NA response variable
+new.data <- subset(data, IPV.Either.Life != "NA")
+
+nrow(new.data)
+#There are 73 countries left in the sample
+
+#Data imputation of predictors
+#Trying to predict lifetime intimate partner violence (% of women surveyed) using WDIs
+#and other gender violence statistics. However, many are NA (thanks, World Bank!). Thus 
+#we must try to impute them (or suffer for a long time to dig up a hodgepodge of sources.
+#I also use an experimental bias correction feature from the randomForest package
+
+imputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+Both.Either.Life+ForcedFirstSex+PregnancyAbuse, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
+
+#Returns 10 cross-validated samples taken "out of the bag."
+#I get % of varation of y between 62% and 83%, depending on the sample taken "out of the bag."
+#Mean Squared Errors (MSEs) between 146.9 (2.012329 percentage points per country) and 194.4 (2.663014).
+###Full return:
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    146.9    62.62 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    161.7    68.94 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    179.9    76.71 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    194.4    82.88 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    182.1    77.65 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    191.4    81.60 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    189.2    80.68 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    190.3    81.15 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    190.9    81.41 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    191.6    81.69 |
+###
