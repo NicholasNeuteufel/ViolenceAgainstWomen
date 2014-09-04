@@ -102,3 +102,111 @@ Tree |      MSE  %Var(y) |
 Tree |      MSE  %Var(y) |
 1000 |    234.2    99.84 |
 ###
+
+#Simple model, replacing Female Education with Gini Index
+simpleImputedTreeGini <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+GiniIndex, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
+
+###
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.2    99.87 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    232.7    99.21 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.3    99.91 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.6    99.61 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.3    99.90 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |      234    99.78 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.5    99.97 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.5    99.54 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |      232    98.90 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    231.6    98.74 |
+###
+
+#Just adding Gini Index on top of Female No Education
+simpleImputedTreeWithGini <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+GiniIndex, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
+
+###
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.4    99.96 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.4    99.52 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.4    99.92 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.1    99.38 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    231.6    98.75 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    232.1    98.94 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.2    99.45 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    230.1    98.09 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    232.2    99.01 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    232.5    99.12 |
+###
+
+#Throwing the (preliminary) sink at the problem--all of my favorite variables (excluding non-working ones)
+PreliminarySink <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+GiniIndex+LaborForceParticipationRatio+PregnancyAbuse+ForcedFirstSex+ExpectedPrimaryCompletion, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
+
+###
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    169.3    72.17 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    166.1    70.80 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    164.3    70.07 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |      181    77.16 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |      202    86.10 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    194.6    82.98 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    215.5    91.89 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    220.3    93.93 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    219.8    93.73 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    218.8    93.28 |
+###
