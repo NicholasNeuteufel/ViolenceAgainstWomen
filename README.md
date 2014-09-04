@@ -7,11 +7,18 @@ Written in R language, using UN Women data: http://www.endvawnow.org/uploads/bro
 
 Step 1: Mapping Out Violence (see Mapping) -- complete (http://imgur.com/H0W1OoO)
 
+
 Step 2: The "Missing" Statistics--trying to predict missing data
+
 a) Linear regression -- impossible
+
 b) Fixed-effects -- incomplete
+
 c) Machine Learning -- completed
-i) Neural nets -- unnecessart
+
+i) Neural nets -- unnecessary
+
 ii) Random Forests -- completed (see ExperimentingDataImputation)
+
 
 Step 3: Statistically analyzing trends by continent and regions within continents
