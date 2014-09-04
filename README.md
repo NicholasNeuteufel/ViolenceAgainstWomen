@@ -3,7 +3,11 @@ ViolenceAgainstWomenAndChildren
 Project by Nicholas Neuteufel while working for Tremendous Hearts (Cape Town, South Africa)
 
 
-Written in R language, using UN Women data: http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf
+Written in R language. 
+
+Uses UN Women data (http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf) and the following R packages: randomForest, quantregForest, WDI, rworldmap, and countrycode.
+
+*****
 
 STEP 1: Mapping Out Violence (see Mapping) -- COMPLETE 
 
