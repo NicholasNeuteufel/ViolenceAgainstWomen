@@ -16,7 +16,6 @@ data <- read.csv(file="WithWDIGlobalData.csv", h=T, sep=",")
 Health.SpendingRange <- WDI(country=data$ISO2, indicator="SH.XPD.TOTL.ZS", start=2005, end=2009, extra=F, cache=NULL)
 PrenatalCareRange <- WDI(country=data$ISO2, indicator="SH.STA.ANVC.ZS", start=2005, end=2009, extra=F, cache=NULL)
 FemaleNoEduRange <- WDI(country=data$ISO2, indicator="BAR.NOED.15UP.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
-Female.G4SurvivalRange <- WDI(country=data$ISO2, indicator="UIS.SR.1.G4.F", start=2005, end=2009, extra=F, cache=NULL)
 LaborForcePercentageRange <- WDI(country=data$ISO2, indicator="SL.TLF.TOTL.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
 LaborForceParticipationRatioRange <- WDI(country=data$ISO2, indicator="SL.TLF.CACT.FM.ZS", start=2005, end=2009, extra=F, cache=NULL)
 ExpectedPrimaryCompletionRange <- WDI(country=data$ISO2, indicator="SE.PRM.EPCR.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
@@ -47,6 +46,7 @@ all <- cbind(data, data2009, data2008, data2007, data2006, data2005)
 ncol(all)
 nrow(all)
 
+#I created an experimental dataframe to do stuff. Then when I am done and satisfied, update the stable one
 #Then I subsetted out all of the redundant year, iso2c, and country columns. I figured out a better way at the end
 #Example code:
 all.experiment.new <- subset(all.experiment.new, select=-c(country.8.1, country.8.2, country.8.3, country.8.4))
@@ -58,3 +58,59 @@ ncol(all)
 
 #Save the work
 write.csv(file="EmpiricalImputationSheet.csv", x=all)
+
+#Automatically replacing NAs with values from the other years. 
+
+#Health Spending only requires 1 more year
+all.experiment.new$Health.Spending[is.na(all.experiment.new$Health.Spending)] <- all.experiment.new$SH.XPD.TOTL.ZS[is.na(is.na(all.experiment.new$Health.Spending))]
+all.experiment.new$Health.Spending
+
+#Prenatal Care still has NAs even including 2005
+all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS[is.na(all.experiment.new$PrenatalCare)]
+all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.1[is.na(all.experiment.new$PrenatalCare)]
+all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.2[is.na(all.experiment.new$PrenatalCare)]
+all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.3[is.na(all.experiment.new$PrenatalCare)]
+all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.4[is.na(all.experiment.new$PrenatalCare)]
+all.experiment.new$PrenatalCare
+
+#Same with Female No Education
+all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS[is.na(all.experiment.new$Female.No.Education)]
+all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.1[is.na(all.experiment.new$Female.No.Education)]
+all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.2[is.na(all.experiment.new$Female.No.Education)]
+all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.3[is.na(all.experiment.new$Female.No.Education)]
+all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.4[is.na(all.experiment.new$Female.No.Education)]
+all.experiment.new$Female.No.Education
+
+#4 left for Labor Force %
+all.experiment.new$Female.LaborForcePercentage[is.na(all.experiment.new$Female.LaborForcePercentage)] <- all.experiment.new$SL.TLF.TOTL.FE.ZS[is.na(all.experiment.new$Female.LaborForcePercentage)]
+all.experiment.new$Female.LaborForcePercentage[is.na(all.experiment.new$Female.LaborForcePercentage)] <- all.experiment.new$SL.TLF.TOTL.FE.ZS.1[is.na(all.experiment.new$Female.LaborForcePercentage)]
+all.experiment.new$Female.LaborForcePercentage[is.na(all.experiment.new$Female.LaborForcePercentage)] <- all.experiment.new$SL.TLF.TOTL.FE.ZS.2[is.na(all.experiment.new$Female.LaborForcePercentage)]
+all.experiment.new$Female.LaborForcePercentage[is.na(all.experiment.new$Female.LaborForcePercentage)] <- all.experiment.new$SL.TLF.TOTL.FE.ZS.3[is.na(all.experiment.new$Female.LaborForcePercentage)]
+all.experiment.new$Female.LaborForcePercentage[is.na(all.experiment.new$Female.LaborForcePercentage)] <- all.experiment.new$SL.TLF.TOTL.FE.ZS.4[is.na(all.experiment.new$Female.LaborForcePercentage)]
+all.experiment.new$Female.LaborForcePercentage
+
+#4 left for Labor Force Participation
+all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS[is.na(all.experiment.new$LaborForceParticipation)]
+all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS.1[is.na(all.experiment.new$LaborForceParticipation)]
+all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS.2[is.na(all.experiment.new$LaborForceParticipation)]
+all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS.3[is.na(all.experiment.new$LaborForceParticipation)]
+all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS.4[is.na(all.experiment.new$LaborForceParticipation)]
+all.experiment.new$LaborForceParticipation
+
+#I did the analysis for Expected Primary Completion. A fourth of the numbers are >100%; >50% NA. I'm dropping it
+
+#Gini Index is a prime candidate for expanded imputation
+all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI[is.na(all.experiment.new$GiniIndex)]
+all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.1[is.na(all.experiment.new$GiniIndex)]
+all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.2[is.na(all.experiment.new$GiniIndex)]
+all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.3[is.na(all.experiment.new$GiniIndex)]
+all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.4[is.na(all.experiment.new$GiniIndex)]
+all.experiment.new$GiniIndex
+
+#Same with the Agriculture Employment metric
+all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS[is.na(all.experiment.new$AgEmploy)]
+all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.1[is.na(all.experiment.new$AgEmploy)]
+all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.2[is.na(all.experiment.new$AgEmploy)]
+all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.3[is.na(all.experiment.new$AgEmploy)]
+all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.4[is.na(all.experiment.new$AgEmploy)]
+all.experiment.new$AgEmploy
