@@ -5,7 +5,7 @@ library(randomForest)
 #Download link for data: https://www.dropbox.com/s/ssqe5gbg7jyvrf1/WithWDIGlobalData.csv?dl=0
 data <- read.csv(file="WithWDIGlobalData.csv", h=T, sep=",")
 
-#Need data with non-NA response variable
+#Need data with non-NA value for the response variable
 new.data <- subset(data, IPV.Either.Life != "NA")
 
 nrow(new.data)
@@ -14,13 +14,16 @@ nrow(new.data)
 #Data imputation of predictors
 #Trying to predict lifetime intimate partner violence (% of women surveyed) using WDIs
 #and other gender violence statistics. However, many are NA (thanks, World Bank!). Thus 
-#we must try to impute them (or suffer for a long time to dig up a hodgepodge of sources.
+#we must try to impute them (or suffer for a long time to dig up a hodgepodge of sources.)
 #I also use an experimental bias correction feature from the randomForest package
 
 imputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+Both.Either.Life+ForcedFirstSex+PregnancyAbuse, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
 
+#Because Random Forests are inherently random, do not surprised if we do not have the exact same numbers
+#for the MSEs or the r-squareds. Error also comes from the random selection of the 10 folds.
+
 #Returns 10 cross-validated samples taken "out of the bag."
-#I get % of varation of y between 62% and 83%, depending on the sample taken "out of the bag."
+#I get r-squareds between 62% and 83%, depending on the sample taken "out of the bag."
 #Mean Squared Errors (MSEs) between 146.9 (mean error of 12.12... percentage points) and 194.4 (~13.9).
 ###Full return:
      |      Out-of-bag   |
@@ -63,7 +66,7 @@ simpleImputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Femal
 
 #Simple model gives evidence that there exist fundamental WDIs that predict IPV prevalence better than 
 #actual violence against women (VAW) statistics (I used "forced first sex" and "pregnancy abuse" percentages).
-#However, the actual VAW stats lower the MSEs, suggesting the rates are related, but not predictive.
+#However, the actual VAW stats massively increases the MSEs, suggesting the rates are related, but not predictive.
 #Perhaps this is because women feel more open to truthfully report abuse in countries where it is not 
 #the beginning of their sexual lives (forced first sex) or present during pregnancy (pregnancy abuse).
 
