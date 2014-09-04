@@ -93,5 +93,5 @@ new.total$AgEmploy <- AgEmploy$SL.AGR.EMPL.ZS
 #Saving my hard work
 write.csv(file="WithWDIGlobalData.csv", x=new.total)
 
-#Do correlations. Lots of NAs from WDI force '''use="complete.obs"'''
+#Do correlations. Lots of NAs from WDI force `use="complete.obs"`
 cor(new.total$IPV.Either.Life, SOMETHING.FROM.ABOVE, use="complete.obs")
