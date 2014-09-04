@@ -1,0 +1,60 @@
+library(WDI)
+
+#Load data with WDI data from "ANALYSIS" page.
+#Download data here: https://www.dropbox.com/s/ssqe5gbg7jyvrf1/WithWDIGlobalData.csv?dl=0
+
+data <- read.csv(file="WithWDIGlobalData.csv", h=T, sep=",")
+
+#The only variable fully complete for all 89 countries was per capita PPP-adjusted GDP. So we 
+#have to get numbers for all of the other variables involved in the "ANALYSIS" and model.
+#Easiest way to do it is to call WDI for the same metrics, but do a range of years from 
+#WDI and just subset it for years and fill in with the newest data possible. 
+#I decided 2005 to 2009 because the mean year of the surveys was 2006. If there are no data
+#for 6 years of a quantity (2005 through 2010), I'm just going to move on or cry.
+#Probably both.
+
+Health.SpendingRange <- WDI(country=data$ISO2, indicator="SH.XPD.TOTL.ZS", start=2005, end=2009, extra=F, cache=NULL)
+PrenatalCareRange <- WDI(country=data$ISO2, indicator="SH.STA.ANVC.ZS", start=2005, end=2009, extra=F, cache=NULL)
+FemaleNoEduRange <- WDI(country=data$ISO2, indicator="BAR.NOED.15UP.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
+Female.G4SurvivalRange <- WDI(country=data$ISO2, indicator="UIS.SR.1.G4.F", start=2005, end=2009, extra=F, cache=NULL)
+LaborForcePercentageRange <- WDI(country=data$ISO2, indicator="SL.TLF.TOTL.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
+LaborForceParticipationRatioRange <- WDI(country=data$ISO2, indicator="SL.TLF.CACT.FM.ZS", start=2005, end=2009, extra=F, cache=NULL)
+ExpectedPrimaryCompletionRange <- WDI(country=data$ISO2, indicator="SE.PRM.EPCR.FE.ZS", start=2005, end=2009, extra=F, cache=NULL)
+GiniIndexRange <- WDI(country=data$ISO2, indicator="SI.POV.GINI", start=2005, end=2009, extra=F, cache=NULL)
+AgEmployRange <- WDI(country=data$ISO2, indicator="SL.AGR.EMPL.ZS", start=2005, end=2009, extra=F, cache=NULL)
+
+ranges <- cbind(Health.SpendingRange, PrenatalCareRange, FemaleNoEduRange, Female.G4SurvivalRange, LaborForcePercentageRange, LaborForceParticipationRatioRange, ExpectedPrimaryCompletionRange, GiniIndexRange, AgEmployRange)
+
+#check columns to make sure it went OK and help in next step. Should be 36
+ncol(ranges)
+
+#Subset the data into year-specific ones so as to "cascade" data by recency.
+data2009 <- subset(ranges, year==2009)
+
+#Check rows to make sure it went OK. Should be 89.
+nrow(data2009)
+
+#Subset for the rest of the range years
+data2008 <- subset(ranges, year==2008)
+data2007 <- subset(ranges, year==2007)
+data2006 <- subset(ranges, year==2006)
+data2005 <- subset(ranges, year==2005)
+
+#Merge the data so that the data are aligned with the correct countries.
+all <- cbind(data, data2009, data2008, data2007, data2006, data2005)
+
+#Check columns and rows. ncol(all) should return 210. nrow(all) should return 89.
+ncol(all)
+nrow(all)
+
+#Then I subsetted out all of the redundant year, iso2c, and country columns. I figured out a better way at the end
+#Example code:
+all.experiment.new <- subset(all.experiment.new, select=-c(country.8.1, country.8.2, country.8.3, country.8.4))
+all.experiment.new <- subset(all.experiment.new, select=-c(year.6.4, iso2c.6.4))
+
+#Final column count is 76; down from 210.
+all <- all.experiment.new
+ncol(all)
+
+#Save the work
+write.csv(file="EmpiricalImputationSheet.csv", x=all)
