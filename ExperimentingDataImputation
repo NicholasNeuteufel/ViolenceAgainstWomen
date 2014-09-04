@@ -21,7 +21,7 @@ imputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.E
 
 #Returns 10 cross-validated samples taken "out of the bag."
 #I get % of varation of y between 62% and 83%, depending on the sample taken "out of the bag."
-#Mean Squared Errors (MSEs) between 146.9 (2.012329 percentage points per country) and 194.4 (2.663014).
+#Mean Squared Errors (MSEs) between 146.9 (mean error of 12.12... percentage points) and 194.4 (~13.9).
 ###Full return:
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
@@ -53,4 +53,49 @@ Tree |      MSE  %Var(y) |
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
 1000 |    191.6    81.69 |
+###
+
+#A simplified model, with much higher r-squareds, but much higher MSEs.
+#Mean errors range from 227.2 (15.07...) to 234.5 (15.39...)
+#R-squareds rangfe from 96.86% to 100%.
+
+simpleImputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
+
+#Simple model gives evidence that there exist fundamental WDIs that predict IPV prevalence better than 
+#actual violence against women (VAW) statistics (I used "forced first sex" and "pregnancy abuse" percentages).
+#However, the actual VAW stats lower the MSEs, suggesting the rates are related, but not predictive.
+#Perhaps this is because women feel more open to truthfully report abuse in countries where it is not 
+#the beginning of their sexual lives (forced first sex) or present during pregnancy (pregnancy abuse).
+
+###
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.5   100.00 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    227.2    96.86 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    232.1    98.95 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.1    99.36 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.7    99.65 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.4    99.95 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.5    99.98 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |      234    99.77 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.2    99.84 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.2    99.84 |
 ###
