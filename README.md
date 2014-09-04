@@ -5,12 +5,14 @@ Project by Nicholas Neuteufel while working for Tremendous Hearts (Cape Town, So
 
 Written in R language, using UN Women data: http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf
 
-Step 1: Mapping Out Violence (see Mapping) -- COMPLETE 
+STEP 1: Mapping Out Violence (see Mapping) -- COMPLETE 
 
 http://imgur.com/H0W1OoO
 
+*****
 
-Step 2: The "Missing" Statistics--trying to predict missing data -- COMPLETE-ish
+
+STEP 2: The "Missing" Statistics--trying to predict missing data
 
 A) Experimentally -- COMPLETE-ish 
 
@@ -30,8 +32,9 @@ a) Try to get war/polity scores working. Then re-run both imputations.
 
 b) Region analysis (Statistically analyzing trends by continent and regions within continents)
 
+*****
 
-Step 3: Predicting key countries with missing data (with both 95% confidence and prediction intervals)
+STEP 3: Predicting key countries with missing data (with both 95% confidence and prediction intervals)
 
 No particular order:
 
@@ -45,5 +48,6 @@ d) Europe: Spain, France.
 
 e) North America: Cuba.
 
+*****
 
-Step 4: Mapping the world; project evaluation.
+STEP 4: Mapping the world; project evaluation.
