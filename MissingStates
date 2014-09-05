@@ -1,0 +1,38 @@
+#Predicting missing violence against women (VAW) statistics for key countries.
+
+library(WDI)
+library(countrycode)
+library(quantregForest)
+
+#Download post-imputation data to train the quantile regression forest
+#Download: [TO BE PLACED]
+#Read paper: N. Meinshausen (2006) "Quantile Regression Forests", Journal of Machine Learning Research 7, 983-999. 
+#Link: http://jmlr.csail.mit.edu/papers/v7/
+
+sample.data <- read.csv(file="", h=T, sep=",")
+
+predictors.sample <- cbind(sample.data$GDP, sample.data$Health.Spending...)
+response.sample <- sample.data$IPV.Either.Life
+QRF <- quantregForest(x=predictors, y=response, mtry=ceiling(ncol(x)/3), nodesize=10, ntree=1000)
+
+#Cross-validate QRF for the sample countries. Going for fits and bounds of the 95% prediction intervals.
+
+out.of.bag <- predict(QRF, newdata=NULL, quantiles=c(0.025, 0.5, 0.975))
+
+#Now for the novelty statistics
+#Come up with list
+missing.names <- c("China", "South Korea", "Saudi Arabia", "Iran", "Iraq", "Indonesia", "Pakistan", "Argentina", "South Africa", "Spain", "France", "Cuba")
+
+#Convert list to ISO2 codes (because WDI requires)
+ISO2 <- countrycode(sourcevar=missing.names, origin="country.name", destination="iso2c", warn=T)
+
+#Download the WDI data for the countries
+
+#Apply the QRF to the missing countries
+missingPredict <- predict(QRF, newdata=missing.data, quantiles=c(0.025, 0.5, 0.975))
+
+lower <- missingPredict[,1]
+fit <- missingPredict[,2]
+upper <- missingPredict[,3]
+
+missingStates <- data.frame(Country = , ISO2 = , Lower = lower, Fit = fit, Upper = upper)
