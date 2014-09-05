@@ -13,7 +13,7 @@ sample.data <- read.csv(file="", h=T, sep=",")
 
 predictors.sample <- cbind(sample.data$GDP, sample.data$Health.Spending...)
 response.sample <- sample.data$IPV.Either.Life
-QRF <- quantregForest(x=predictors, y=response, mtry=ceiling(ncol(x)/3), nodesize=10, ntree=1000)
+QRF <- quantregForest(x=predictors, y=response, nodesize=10, ntree=1000)
 
 #Cross-validate QRF for the sample countries. Going for fits and bounds of the 95% prediction intervals.
 
