@@ -26,7 +26,12 @@ missing.names <- c("China", "South Korea", "Saudi Arabia", "Iran", "Iraq", "Indo
 #Convert list to ISO2 codes (because WDI requires)
 ISO2 <- countrycode(sourcevar=missing.names, origin="country.name", destination="iso2c", warn=T)
 
+missing.data <- data.frame(Name = missing.names, iso.code = ISO2)
+
 #Download the WDI data for the countries
+missingWDI <- WDI(country=ISO2, indicator=c("SH.XPD.TOTL.ZS", "SH.STA.ANVC.ZS", "BAR.NOED.15UP.FE.ZS", "SL.TLF.TOTL.FE.ZS", "SL.TLF.CACT.FM.ZS", "SL.AGR.EMPL.ZS"), start=2005, end=2010, extra=F, cache=NULL)
+
+#Tidy it up/impute data
 
 #Apply the QRF to the missing countries
 missingPredict <- predict(QRF, newdata=missing.data, quantiles=c(0.025, 0.5, 0.975))
@@ -35,4 +40,8 @@ lower <- missingPredict[,1]
 fit <- missingPredict[,2]
 upper <- missingPredict[,3]
 
-missingStates <- data.frame(Country = , ISO2 = , Lower = lower, Fit = fit, Upper = upper)
+missingStates <- data.frame(Country = , Lower = lower, Fit = fit, Upper = upper)
+
+#Map it
+
+library(rworldmap)
