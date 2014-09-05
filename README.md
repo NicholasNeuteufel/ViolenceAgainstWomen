@@ -1,4 +1,4 @@
-ViolenceAgainstWomenAndChildren
+ViolenceAgainstWomen
 ===============================
 Project by Nicholas Neuteufel while working for Tremendous Hearts (Cape Town, South Africa)
 
