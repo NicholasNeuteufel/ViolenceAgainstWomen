@@ -18,16 +18,16 @@ http://imgur.com/H0W1OoO
 
 STEP 2: The "Missing" Statistics--trying to predict missing data
 
-A) Experimentally -- COMPLETE-ish 
+A) Experimentally -- COMPLETE 
 
 a) Random Forests (RF) -- complete (see ExperimentingDataImputation)
 
 
-B) Empirically -- NEXT STEP
+B) Empirically -- COMPLETE-ish
 
-a) Using older data from WDI to fill-in incomplete cases (NAs)
+a) Using older data from WDI to fill-in incomplete cases (NAs) -- COMPLETE
 
-b) Comparing empirical data to RF predicted imputation
+b) Comparing empirical data to RF predicted imputation (pending C(a))
 
 
 C) Overall
