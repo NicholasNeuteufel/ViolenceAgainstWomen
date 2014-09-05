@@ -1,0 +1,54 @@
+#After EmpiricalDataImputation, we still have NAs in our predictors. 
+#I am just going to use data imputation from randomForest to fill in the blanks
+
+library(randomForest)
+
+#Load data: https://www.dropbox.com/s/u65h1pyom5vl0vf/DoneEmpiricalImputation.csv?dl=0
+data <- read.csv(file="DoneEmpiricalImputation.csv", h=T, sep=",")
+
+#Need non-NA response
+full <- subset(data, IPV.Either.Life != "NA")
+
+#Let's learn about our full set
+summary(full)
+
+#Run this ish
+sink <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+LaborForceParticipationRatio, iter=10, data=full, na.action=na.omit, ntree=1000, corr.bias=T)
+###
+|      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    228.7    97.50 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    227.8    97.13 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    230.8    98.39 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    223.9    95.47 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    226.4    96.54 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    228.2    97.30 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    229.2    97.71 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    227.2    96.85 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    223.6    95.32 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    226.5    96.55 |
+###
+
+#Merge it with country name data
+sink$Country <- full$Country
+
+#learn about our imputed data
+summary(sink)
