@@ -22,7 +22,7 @@ ExpectedPrimaryCompletionRange <- WDI(country=data$ISO2, indicator="SE.PRM.EPCR.
 GiniIndexRange <- WDI(country=data$ISO2, indicator="SI.POV.GINI", start=2005, end=2009, extra=F, cache=NULL)
 AgEmployRange <- WDI(country=data$ISO2, indicator="SL.AGR.EMPL.ZS", start=2005, end=2009, extra=F, cache=NULL)
 
-ranges <- cbind(Health.SpendingRange, PrenatalCareRange, FemaleNoEduRange, Female.G4SurvivalRange, LaborForcePercentageRange, LaborForceParticipationRatioRange, ExpectedPrimaryCompletionRange, GiniIndexRange, AgEmployRange)
+ranges <- cbind(Health.SpendingRange, PrenatalCareRange, FemaleNoEduRange, LaborForcePercentageRange, LaborForceParticipationRatioRange, ExpectedPrimaryCompletionRange, GiniIndexRange, AgEmployRange)
 
 #check columns to make sure it went OK and help in next step. Should be 36
 ncol(ranges)
@@ -65,7 +65,7 @@ write.csv(file="EmpiricalImputationSheet.csv", x=all)
 all.experiment.new$Health.Spending[is.na(all.experiment.new$Health.Spending)] <- all.experiment.new$SH.XPD.TOTL.ZS[is.na(is.na(all.experiment.new$Health.Spending))]
 all.experiment.new$Health.Spending
 
-#Prenatal Care still has NAs even including 2005
+#Prenatal Care still has 29 NAs even including 2005
 all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS[is.na(all.experiment.new$PrenatalCare)]
 all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.1[is.na(all.experiment.new$PrenatalCare)]
 all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.2[is.na(all.experiment.new$PrenatalCare)]
@@ -73,7 +73,7 @@ all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.e
 all.experiment.new$PrenatalCare[is.na(all.experiment.new$PrenatalCare)] <- all.experiment.new$SH.STA.ANVC.ZS.4[is.na(all.experiment.new$PrenatalCare)]
 all.experiment.new$PrenatalCare
 
-#Same with Female No Education
+#14 for Female No Education
 all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS[is.na(all.experiment.new$Female.No.Education)]
 all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.1[is.na(all.experiment.new$Female.No.Education)]
 all.experiment.new$Female.No.Education[is.na(all.experiment.new$Female.No.Education)] <- all.experiment.new$BAR.NOED.15UP.FE.ZS.2[is.na(all.experiment.new$Female.No.Education)]
@@ -97,9 +97,9 @@ all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForcePa
 all.experiment.new$LaborForceParticipation[is.na(all.experiment.new$LaborForceParticipation)] <- all.experiment.new$SL.TLF.CACT.FM.ZS.4[is.na(all.experiment.new$LaborForceParticipation)]
 all.experiment.new$LaborForceParticipation
 
-#I did the analysis for Expected Primary Completion. A fourth of the numbers are >100%; >50% NA. I'm dropping it
+#I did the analysis for Expected Primary Completion. A fourth of the numbers are >100%; 29 NAs. I'm dropping it
 
-#Gini Index is a prime candidate for expanded imputation
+#Gini Index: 37 NAs
 all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI[is.na(all.experiment.new$GiniIndex)]
 all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.1[is.na(all.experiment.new$GiniIndex)]
 all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.2[is.na(all.experiment.new$GiniIndex)]
@@ -107,10 +107,20 @@ all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experim
 all.experiment.new$GiniIndex[is.na(all.experiment.new$GiniIndex)] <- all.experiment.new$SI.POV.GINI.4[is.na(all.experiment.new$GiniIndex)]
 all.experiment.new$GiniIndex
 
-#Same with the Agriculture Employment metric
+#14 for Agriculture Employment
 all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS[is.na(all.experiment.new$AgEmploy)]
 all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.1[is.na(all.experiment.new$AgEmploy)]
 all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.2[is.na(all.experiment.new$AgEmploy)]
 all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.3[is.na(all.experiment.new$AgEmploy)]
 all.experiment.new$AgEmploy[is.na(all.experiment.new$AgEmploy)] <- all.experiment.new$SL.AGR.EMPL.ZS.4[is.na(all.experiment.new$AgEmploy)]
 all.experiment.new$AgEmploy
+
+#NAs from:
+summary(all.experiment.new)
+
+#Updated with 2004 data; drop Female Post-secondary and Gini Index.
+#This new dataframe is "original."
+#Save work and send to Experimental data imputation module
+write.csv(file="DoneEmpiricalImputation.csv", x=original)
+
+#Link: https://www.dropbox.com/s/u65h1pyom5vl0vf/DoneEmpiricalImputation.csv?dl=0
