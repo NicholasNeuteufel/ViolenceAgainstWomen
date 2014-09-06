@@ -42,15 +42,13 @@ STEP 3: Predicting key countries with missing data (with both 95% confidence and
 
 No particular order:
 
-a) Asia: China, Koreas, Saudi Arabia, Iraq, Iran, Pakistan, Indonesia.
+a) Asia: China, South Korea, Saudi Arabia, Iraq, Iran, Pakistan, Indonesia.
 
 b) Latin America: Argentina.
 
-c) Africa: South Africa, Libya.
+c) Africa: South Africa.
 
 d) Europe: Spain, France.
-
-e) North America: Cuba.
 
 *****
 
