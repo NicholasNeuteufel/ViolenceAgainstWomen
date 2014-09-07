@@ -17,196 +17,38 @@ nrow(new.data)
 #we must try to impute them (or suffer for a long time to dig up a hodgepodge of sources.)
 #I also use an experimental bias correction feature from the randomForest package
 
-imputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+Both.Either.Life+ForcedFirstSex+PregnancyAbuse, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
-
-#Because Random Forests are inherently random, do not surprised if we do not have the exact same numbers
-#for the MSEs or the r-squareds. Error also comes from the random selection of the 10 folds.
-
-#Returns 10 cross-validated samples taken "out of the bag."
-#I get r-squareds between 62% and 83%, depending on the sample taken "out of the bag."
-#Mean Squared Errors (MSEs) between 146.9 (mean error of 12.12... percentage points) and 194.4 (~13.9).
-###Full return:
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    146.9    62.62 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    161.7    68.94 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    179.9    76.71 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    194.4    82.88 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    182.1    77.65 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    191.4    81.60 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    189.2    80.68 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    190.3    81.15 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    190.9    81.41 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    191.6    81.69 |
-###
-
-#A simplified model, with much higher r-squareds, but much higher MSEs.
-#Mean errors range from 227.2 (15.07...) to 234.5 (15.39...)
-#R-squareds rangfe from 96.86% to 100%.
-
-simpleImputedTree <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
-
-#Simple model gives evidence that there exist fundamental WDIs that predict IPV prevalence better than 
-#actual violence against women (VAW) statistics (I used "forced first sex" and "pregnancy abuse" percentages).
-#However, the actual VAW stats massively increases the MSEs, suggesting the rates are related, but not predictive.
-#Perhaps this is because women feel more open to truthfully report abuse in countries where it is not 
-#the beginning of their sexual lives (forced first sex) or present during pregnancy (pregnancy abuse).
+Sink <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+LaborForceParticipationRatio, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
 
 ###
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
-1000 |    234.5   100.00 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    227.2    96.86 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    232.1    98.95 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.1    99.36 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.7    99.65 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.4    99.95 |
+1000 |    231.9    98.88 |
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
 1000 |    234.5    99.98 |
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
-1000 |      234    99.77 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
 1000 |    234.2    99.84 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.2    99.84 |
-###
-
-#Simple model, replacing Female Education with Gini Index
-simpleImputedTreeGini <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+GiniIndex, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
-
-###
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.2    99.87 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    232.7    99.21 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.3    99.91 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.6    99.61 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.3    99.90 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |      234    99.78 |
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
 1000 |    234.5    99.97 |
      |      Out-of-bag   |
 Tree |      MSE  %Var(y) |
+1000 |    234.2    99.85 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.8    99.70 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.5    99.96 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    233.9    99.73 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
+1000 |    234.2    99.87 |
+     |      Out-of-bag   |
+Tree |      MSE  %Var(y) |
 1000 |    233.5    99.54 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |      232    98.90 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    231.6    98.74 |
 ###
 
-#Just adding Gini Index on top of Female No Education
-simpleImputedTreeWithGini <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+GiniIndex, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
-
-###
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.4    99.96 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.4    99.52 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    234.4    99.92 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.1    99.38 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    231.6    98.75 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    232.1    98.94 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    233.2    99.45 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    230.1    98.09 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    232.2    99.01 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    232.5    99.12 |
-###
-
-#Throwing the (preliminary) sink at the problem--all of my favorite variables (excluding non-working ones)
-PreliminarySink <- rfImpute(IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+GiniIndex+LaborForceParticipationRatio+PregnancyAbuse+ForcedFirstSex+ExpectedPrimaryCompletion, iter=10, data=new.data, na.action=na.omit, ntree=1000, corr.bias=T)
-
-###
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    169.3    72.17 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    166.1    70.80 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    164.3    70.07 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |      181    77.16 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |      202    86.10 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    194.6    82.98 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    215.5    91.89 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    220.3    93.93 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    219.8    93.73 |
-     |      Out-of-bag   |
-Tree |      MSE  %Var(y) |
-1000 |    218.8    93.28 |
-###
