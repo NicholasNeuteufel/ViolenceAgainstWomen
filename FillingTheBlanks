@@ -47,8 +47,84 @@ Tree |      MSE  %Var(y) |
 1000 |    226.5    96.55 |
 ###
 
-#Merge it with country name data
-sink$Country <- full$Country
+#Make a comparison to the experimentally imputed data
+#All GDP and health spending data were found empirically
+comparison <- data.frame(Country=new.data$Country, AgEmployDiff=Sink$AgEmploy-SinkEmp$AgEmploy, EduDiff=Sink$Female.No.Education-SinkEmp$Female.No.Education, LaborDiff=Sink$LaborForceParticipationRatio-SinkEmp$LaborForceParticipationRatio)
 
-#learn about our imputed data
-summary(sink)
+#Shows importance of data. More data will be incorporated into v2.0
+###
+              Country AgEmployDiff    EduDiff LaborDiff
+1        Burkina Faso    0.0000000   0.000000  0.000000
+2            Cameroon    0.0000000   0.000000  0.000000
+3          Cape Verde   16.7154181   4.913585 -6.588158
+4                 DRC    0.0000000   3.010819  0.000000
+5               Egypt    0.0000000   0.000000  0.000000
+6            Ethiopia  -65.5268706 -15.696013  0.000000
+7               Ghana  -10.9833090   0.000000  0.000000
+8               Kenya   -2.5197997   0.000000  0.000000
+9             Liberia   -3.1993569   0.000000  0.000000
+10             Malawi    0.0000000   0.000000  0.000000
+11         Mozambique    0.0000000   0.000000  0.000000
+12            Nigeria    0.0000000   0.000000  0.000000
+13             Rwanda   -9.2286126   0.000000  0.000000
+14             Uganda   -6.1691377   1.023251  0.000000
+15           Tanzania    0.0000000   0.000000  0.000000
+16             Zambia    0.0000000   0.000000  0.000000
+17           Zimbabwe    0.0000000   0.000000  0.000000
+18         Azerbaijan    0.0000000   0.000000  0.000000
+19         Bangladesh    0.0000000   0.000000  0.000000
+20           Cambodia    0.0000000   0.000000  0.000000
+21          Hong Kong  -39.0403503   1.755749  0.000000
+22              India    0.0000000   0.000000  0.000000
+23              Japan    0.0000000   0.000000  0.000000
+24           Maldives    0.0000000   0.000000  0.000000
+25              Nepal  -33.8846113  -6.486695  0.000000
+26        Philippines    0.0000000   0.000000  0.000000
+27           Thailand    0.0000000   0.000000  0.000000
+28            Vietnam  -20.3395275   0.000000  0.000000
+29            Armenia    0.0000000   0.000000  0.000000
+30     Czech Republic    0.0000000   0.000000  0.000000
+31            Denmark    0.0000000   0.000000  0.000000
+32            Georgia    0.0000000   0.000000  0.000000
+33            Germany  -34.7142686 -16.589810 -4.003747
+34            Iceland    0.0000000   0.000000  0.000000
+35            Ireland    0.0000000   0.000000  0.000000
+36              Italy    0.0000000   0.000000  0.000000
+37          Lithuania    0.0000000   0.000000  0.000000
+38              Malta    0.0000000   0.000000  0.000000
+39             Norway   14.2987295   0.000000  0.000000
+40             Poland    0.0000000   0.000000  0.000000
+41            Moldova    0.0000000   0.000000  0.000000
+42            Romania  -14.5459770   0.000000  0.000000
+43 Russian Federation  -21.8083531   0.000000  0.000000
+44           Slovakia  -12.2254664  -3.462481  0.000000
+45        Switzerland    0.0000000   0.000000  0.000000
+46             Turkey  -10.7364408   0.000000  0.000000
+47            Ukraine    0.5177571   0.000000  0.000000
+48     United Kingdom    0.0000000   0.000000  0.000000
+49            Bolivia    0.0000000   0.000000  0.000000
+50             Brazil    0.0000000   0.000000  0.000000
+51              Chile    0.0000000   0.000000  0.000000
+52           Colombia    0.0000000   0.000000  0.000000
+53            Ecuador    0.0000000   0.000000  0.000000
+54        El Salvador    3.7773332   0.000000  0.000000
+55          Guatemala  -39.9418962   0.000000  0.000000
+56          Nicaragua  -14.3322377  -8.183521  0.000000
+57               Peru   -4.7236291   2.180188  0.000000
+58           Barbados    0.0000000   0.000000  0.000000
+59 Dominican Republic    0.0000000   0.000000  0.000000
+60              Haiti    0.0000000   1.311890  0.000000
+61            Jamaica    0.0000000   0.000000  0.000000
+62             Mexico    0.0000000   0.000000  0.000000
+63             Canada  -14.8807972  -1.748587  4.447353
+64         Costa Rica  -32.1705217   0.000000  0.000000
+65      United States  -36.0366971   0.000000  0.000000
+66          Australia    5.1649197   0.000000  0.000000
+67           Kiribati    0.0000000   0.000000  0.000000
+68   Marshall Islands  -26.7244786   0.000000  0.000000
+69        New Zealand  -26.2915150  -1.233484  0.000000
+70    Solomon Islands    0.0000000   0.000000  0.000000
+71        Timor-Leste  -17.2043241   0.000000  0.000000
+72             Tuvalu  -39.1323614   0.000000  0.000000
+73            Vanuatu  -39.3568397   0.000000  0.000000
+###
