@@ -1,0 +1,24 @@
+#We need GPS coordinates for our countries to do geography weighted regression (GWR)
+#GWR is really cool--read this paper: Clemens et al, "The Geography of Distributive Politics." 
+#Legislative Studies Quarterly. http://www.utdallas.edu/~michael.crespin/LSQ%20GWR.pdf
+
+library(ggmap)
+
+#Load the data: https://www.dropbox.com/s/u65h1pyom5vl0vf/DoneEmpiricalImputation.csv?dl=0
+complete <- read.csv(file="DoneEmpiricalImputation.csv", h=T, sep=",")
+
+#Must have Google recognizable names in a list/vector for ggmap
+complete$Country <- as.character(complete$Country)
+complete[5, "Country"] <- "Democratic Republic of the Congo"
+countries <- complete$Country
+
+#Retrieve the GPS coordinates from Google Maps of all 89 countries; returns dataframe with 
+#columns "lat" and "lon"
+gps.coords <- geocode(countries, output="latlon")
+
+lon <- gps.coords$lon
+lat <- gps.coords$lat
+complete <- cbind(complete, lat, lon)
+
+#Save our work
+write.csv(file="WithGPSdata.csv", x=complete)
