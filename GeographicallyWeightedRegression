@@ -87,11 +87,37 @@ gwr.model
 #WOW! OLS was -0.02645. Improvement of 0.46! 
 #+1,642.375% increase in r^2 due to geography
 
-#Try bi-square kernels (ultimately reject)
+#Try bi-square kernels (better AICc; worse AIC and r^2)
 bw.bi <- gwr.sel(formula, data=map, gweight=gwr.bisquare, adapt=T)
-gwr.model.bi <- gwr(formula, data=map, gweight=gwr.bisquare, adapt=bw, hatmatrix=T, se.fit=T)
+gwr.model.bi <- gwr(formula, data=map, gweight=gwr.bisquare, adapt=bw.bi, hatmatrix=T, se.fit=T)
 gwr.model.bi
-#r^2 of 0.3388157; other is better
+
+#Call:
+#gwr(formula = formula, data = map, gweight = gwr.bisquare, adapt = bw.bi, 
+#    hatmatrix = T, se.fit = T)
+#Kernel function: gwr.bisquare 
+#Adaptive quantile: 0.7591651 (about 55 of 73 data points)
+#Summary of GWR coefficient estimates at data points:
+#                                   Min.    1st Qu.     Median    3rd Qu.       Max.  Global
+#X.Intercept.                 24.1000000 32.7500000 34.8000000 39.0900000 46.9100000 36.8536
+#GDP                          -0.0004765  0.0000569  0.0001966  0.0002625  0.0007554  0.0001
+#Health.Spending              -1.0220000 -0.6798000 -0.0477200  0.4251000  0.9239000  0.2675
+#AgEmploy                      0.0498100  0.2067000  0.3593000  0.4387000  0.4984000  0.2264
+#Female.No.Education          -0.3774000 -0.2501000 -0.1327000 -0.0873200 -0.0094320 -0.1767
+#LaborForceParticipationRatio -0.4208000 -0.1864000 -0.1382000 -0.0716700 -0.0118200 -0.1555
+#Number of data points: 73 
+#Effective number of parameters (residual: 2traceS - traceS'S): 18.4117 
+#Effective degrees of freedom (residual: 2traceS - traceS'S): 54.5883 
+#Sigma (residual: 2traceS - traceS'S): 14.40081 
+#Effective number of parameters (model: traceS): 14.83287 
+#Effective degrees of freedom (model: traceS): 58.16713 
+#Sigma (model: traceS): 13.95076 
+#Sigma (ML): 12.45303 
+#AICc (GWR p. 61, eq 2.33; p. 96, eq. 4.21): 616.5275 
+#AIC (GWR p. 96, eq. 4.22): 590.2047 
+#Residual sum of squares: 11320.7 
+#Quasi-global R2: 0.3388157
+
 
 #Map the coefficients over space
 #GDP: https://www.dropbox.com/s/wwnsa02uesu4s3e/gwrGDP.png?dl=0
