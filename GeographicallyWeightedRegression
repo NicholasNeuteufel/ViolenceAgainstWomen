@@ -35,23 +35,24 @@ spplot(map.resids, cuts=quantile(resids), col.regions=colours, cex=1, main="Resi
 
 #Find the optimal bandwidth through cross-validation
 bw <- gwr.sel(formula, data=map, adapt=T)
-###RESULTS
-Adaptive q: 0.381966 CV score: 20005.59 
-Adaptive q: 0.618034 CV score: 20293.11 
-Adaptive q: 0.236068 CV score: 19733.83 
-Adaptive q: 0.145898 CV score: 20631.93 
-Adaptive q: 0.2917961 CV score: 19914.1 
-Adaptive q: 0.2016261 CV score: 19692.05 
-Adaptive q: 0.191808 CV score: 19667.21 
-Adaptive q: 0.174272 CV score: 19912.86 
-Adaptive q: 0.1851098 CV score: 19783.28 
-Adaptive q: 0.1955582 CV score: 19668.91 
-Adaptive q: 0.1930219 CV score: 19666.41 
-Adaptive q: 0.193164 CV score: 19666.41 
-Adaptive q: 0.1931233 CV score: 19666.41 
-Adaptive q: 0.1930826 CV score: 19666.41 
-Adaptive q: 0.1931233 CV score: 19666.41 
-###
+
+#RESULTS
+#Adaptive q: 0.381966 CV score: 20005.59 
+#Adaptive q: 0.618034 CV score: 20293.11 
+#Adaptive q: 0.236068 CV score: 19733.83 
+#Adaptive q: 0.145898 CV score: 20631.93 
+#Adaptive q: 0.2917961 CV score: 19914.1 
+#Adaptive q: 0.2016261 CV score: 19692.05 
+#Adaptive q: 0.191808 CV score: 19667.21 
+#Adaptive q: 0.174272 CV score: 19912.86 
+#Adaptive q: 0.1851098 CV score: 19783.28 
+#Adaptive q: 0.1955582 CV score: 19668.91 
+#Adaptive q: 0.1930219 CV score: 19666.41 
+#Adaptive q: 0.193164 CV score: 19666.41 
+#Adaptive q: 0.1931233 CV score: 19666.41 
+#Adaptive q: 0.1930826 CV score: 19666.41 
+#Adaptive q: 0.1931233 CV score: 19666.41 
+#
 
 #Fit the model, then review it
 gwr.model <- gwr(formula, data=map, adapt=bw, hatmatrix=T, se.fit=T)
@@ -136,3 +137,53 @@ png("gwrLaborForcesig.png")
 spplot(sig.mapLaborForceT, cuts=LaborForce.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is labor force participation signficant worldwide?")
 dev.off()
 #Result: https://www.dropbox.com/s/itfqf87ef8wmxsn/gwrLaborForcesig.png?dl=0
+
+#Create maps for GWR's predicted values and their associated standard errors
+png("gwrPredictions.png")
+spplot(gwr.model$SDF, "pred", col.regions=colours, main="Predicted Value")
+dev.off()
+
+png("gwrPredictedSE.png")
+spplot(gwr.model$SDF, "pred.se", col.regions=colours, main="Standard Error")
+dev.off()
+
+#Bubble plots for coefficients
+png("gwrGDPbubble.png")
+bubble(gwr.model$SDF, "GDP", fill = F, main = "GDP Coefficient")
+dev.off()
+
+png("gwrHealthSpendingbubble.png")
+bubble(gwr.model$SDF, "Health.Spending", fill = F, main = "Health Spending Coefficient")
+dev.off()
+
+png("gwrAgEmploybubble.png")
+bubble(gwr.model$SDF, "AgEmploy", fill = F, main = "Agriculture Employment Coefficient")
+dev.off()
+
+png("gwrFemaleNoEdububble.png")
+bubble(gwr.model$SDF, "Female.No.Education", fill = F, main = "Female No Education Coefficient")
+dev.off()
+
+png("gwrLaborForceParticipationbubble.png")
+bubble(gwr.model$SDF, "LaborForceParticipationRatio", fill = F, main = "Labor Force Participation Coefficient")
+dev.off()
+
+#Test statistics
+BFC02.gwr.test(gwr.model)
+
+#Brunsdon, Fotheringham & Charlton (2002, pp. 91-2) ANOVA
+#
+#data:  gwr.model
+#F = 1.6888, df1 = 67.000, df2 = 48.155, p-value = 0.02868
+#alternative hypothesis: greater
+#sample estimates:
+#SS OLS residuals SS GWR residuals 
+#       16354.257         9683.977
+
+anova(gwr.model)
+
+#Analysis of Variance Table 
+#                    Df  Sum Sq Mean Sq F value
+#OLS Residuals    6.000 16354.3                
+#GWR Improvement 18.845  6670.3  353.95        
+#GWR Residuals   48.155  9684.0  201.10  1.7601
