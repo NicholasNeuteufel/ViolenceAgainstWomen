@@ -5,7 +5,7 @@
 library(ggmap)
 
 #Load the data: https://www.dropbox.com/s/u65h1pyom5vl0vf/DoneEmpiricalImputation.csv?dl=0
-#Real: write.csv(file="WithGPSdata-complete.csv", x=blanks)
+#Real: https://www.dropbox.com/s/4kpzaa5ttbuceh3/WithGPSdata-complete.csv?dl=0
 complete <- read.csv(file="DoneEmpiricalImputation.csv", h=T, sep=",")
 blanks <- read.csv(file="BlanksFilled.csv", h=T, sep=",")
 
