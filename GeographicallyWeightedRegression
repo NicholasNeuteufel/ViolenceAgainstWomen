@@ -87,6 +87,12 @@ gwr.model
 #WOW! OLS was -0.02645. Improvement of 0.46! 
 #+1,642.375% increase in r^2 due to geography
 
+#Try bi-square kernels (ultimately reject)
+bw.bi <- gwr.sel(formula, data=map, gweight=gwr.bisquare, adapt=T)
+gwr.model.bi <- gwr(formula, data=map, gweight=gwr.bisquare, adapt=bw, hatmatrix=T, se.fit=T)
+gwr.model.bi
+#r^2 of 0.3388157; other is better
+
 #Map the coefficients over space
 #GDP: https://www.dropbox.com/s/wwnsa02uesu4s3e/gwrGDP.png?dl=0
 png("gwrGDP.png")
