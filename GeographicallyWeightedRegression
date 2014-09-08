@@ -17,7 +17,7 @@ map <- SpatialPointsDataFrame(data=blanksWithout, coords=cbind(blanks$lon, blank
 colours = c("dark blue", "green", "red", "dark red")
 
 #Plot test
-spplot(map, "IPV.Either.Life", cuts=quantile(IPV.Either.Life), col.regions=colours) 
+spplot(map, "IPV.Either.Life", cuts=quantile(blanks$IPV.Either.Life), col.regions=colours) 
 #Link: https://www.dropbox.com/s/tedrhk1aigcwxu9/beginningGWR.png?dl=0
 
 #OLS regression formula
