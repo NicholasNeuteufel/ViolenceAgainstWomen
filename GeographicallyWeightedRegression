@@ -52,13 +52,38 @@ bw <- gwr.sel(formula, data=map, adapt=T)
 #Adaptive q: 0.1931233 CV score: 19666.41 
 #Adaptive q: 0.1930826 CV score: 19666.41 
 #Adaptive q: 0.1931233 CV score: 19666.41 
-#
 
 #Fit the model, then review it
+
 gwr.model <- gwr(formula, data=map, adapt=bw, hatmatrix=T, se.fit=T)
 gwr.model
 
-#"Quasi-global r^2: 0.4344082" 
+#Call:
+#gwr(formula = formula, data = map, adapt = bw, hatmatrix = T, 
+    se.fit = T)
+#Kernel function: gwr.Gauss 
+#Adaptive quantile: 0.1931233 (about 14 of 73 data points)
+#Summary of GWR coefficient estimates at data points:
+#                                  Min.    1st Qu.     Median    3rd Qu.       Max.  Global
+#X.Intercept.                  2.143e+01  3.196e+01  3.709e+01  4.011e+01  4.886e+01 36.8536
+#GDP                          -6.413e-04  8.057e-06  1.776e-04  2.556e-04  8.938e-04  0.0001
+#Health.Spending              -1.147e+00 -6.811e-01  6.790e-02  7.756e-01  1.537e+00  0.2675
+#AgEmploy                     -8.774e-03  2.186e-01  3.563e-01  4.601e-01  6.305e-01  0.2264
+#Female.No.Education          -6.892e-01 -3.004e-01 -1.461e-01 -5.548e-02  3.354e-02 -0.1767
+#LaborForceParticipationRatio -4.986e-01 -2.419e-01 -1.734e-01 -5.772e-02  4.108e-03 -0.1555
+#Number of data points: 73 
+#Effective number of parameters (residual: 2traceS - traceS'S): 24.84511 
+#Effective degrees of freedom (residual: 2traceS - traceS'S): 48.15489 
+#Sigma (residual: 2traceS - traceS'S): 14.18099 
+#Effective number of parameters (model: traceS): 19.66171 
+#Effective degrees of freedom (model: traceS): 53.33829 
+#Sigma (model: traceS): 13.47433 
+#Sigma (ML): 11.51769 
+#AICc (GWR p. 61, eq 2.33; p. 96, eq. 4.21): 622.7316 
+#AIC (GWR p. 96, eq. 4.22): 583.6338 
+#Residual sum of squares: 9683.977
+#Quasi-global r^2: 0.4344082 
+
 #WOW! OLS was -0.02645. Improvement of 0.46! 
 #+1,642.375% increase in r^2 due to geography
 
