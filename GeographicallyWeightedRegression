@@ -1,0 +1,134 @@
+#Geographically weighted regression (GWR)
+#Shout-out to Austin Clemens for introducing me to GWR
+#That paper: http://www.utdallas.edu/~michael.crespin/LSQ%20GWR.pdf
+
+library(spgwr)
+library(lattice)
+library(sp)
+
+#Need to load data from CoordinatesCollection AND make data without coordinates
+#Link to full: https://www.dropbox.com/s/4kpzaa5ttbuceh3/WithGPSdata-complete.csv?dl=0
+blanks <- read.csv(file="WithGPSdata-complete.csv", h=T, sep=",")
+blanksWithout <- blanks
+blanksWithout[,"lat"] <- NULL
+blanksWithout[,"lon"] <- NULL
+
+map <- SpatialPointsDataFrame(data=blanksWithout, coords=cbind(blanks$lon, blanks$lat))
+colours = c("dark blue", "green", "red", "dark red")
+
+#Plot test
+spplot(map, "IPV.Either.Life", cuts=quantile(IPV.Either.Life), col.regions=colours) 
+#Link: https://www.dropbox.com/s/tedrhk1aigcwxu9/beginningGWR.png?dl=0
+
+#OLS regression formula
+formula <- IPV.Either.Life~GDP+Health.Spending+AgEmploy+Female.No.Education+LaborForceParticipationRatio
+
+model1 <- lm(formula, data=map)
+summary(model1)
+#Adjusted r^2: -0.02645
+
+#See residuals
+resids <- residuals(model1)
+map.resids <- SpatialPointsDataFrame(data=data.frame(resids), coords=cbind(blanks$lon, blanks$lat))
+spplot(map.resids, cuts=quantile(resids), col.regions=colours, cex=1, main="Residuals")
+#Result: https://www.dropbox.com/s/286y3e22d63udg7/residualsGWR.png?dl=0
+
+#Find the optimal bandwidth through cross-validation
+bw <- gwr.sel(formula, data=map, adapt=T)
+###RESULTS
+Adaptive q: 0.381966 CV score: 20005.59 
+Adaptive q: 0.618034 CV score: 20293.11 
+Adaptive q: 0.236068 CV score: 19733.83 
+Adaptive q: 0.145898 CV score: 20631.93 
+Adaptive q: 0.2917961 CV score: 19914.1 
+Adaptive q: 0.2016261 CV score: 19692.05 
+Adaptive q: 0.191808 CV score: 19667.21 
+Adaptive q: 0.174272 CV score: 19912.86 
+Adaptive q: 0.1851098 CV score: 19783.28 
+Adaptive q: 0.1955582 CV score: 19668.91 
+Adaptive q: 0.1930219 CV score: 19666.41 
+Adaptive q: 0.193164 CV score: 19666.41 
+Adaptive q: 0.1931233 CV score: 19666.41 
+Adaptive q: 0.1930826 CV score: 19666.41 
+Adaptive q: 0.1931233 CV score: 19666.41 
+###
+
+#Fit the model, then review it
+gwr.model <- gwr(formula, data=map, adapt=bw, hatmatrix=T, se.fit=T)
+gwr.model
+
+#Map the coefficients over space
+#GDP: https://www.dropbox.com/s/wwnsa02uesu4s3e/gwrGDP.png?dl=0
+png("gwrGDP.png")
+spplot(gwr.model$SDF, "GDP", cuts=quantile(gwr.model$SDF$GDP), col.reg=colours, cex=0.6, main="GDP Coefficient over Space")
+dev.off()
+
+#Health spending: https://www.dropbox.com/s/q3rnuu0zxvso7ll/gwrHealthSpending.png?dl=0
+png("gwrHealthSpending.png")
+spplot(gwr.model$SDF, "Health.Spending", cuts=quantile(gwr.model$SDF$Health.Spending), col.reg=colours, cex=0.6, main="Health Spending Coefficient over Space")
+dev.off()
+
+#Agriculture employment: https://www.dropbox.com/s/zq1ijbop6ecz016/gwrAgEmploy.png?dl=0
+png("gwrAgEmploy.png")
+spplot(gwr.model$SDF, "AgEmploy", cuts=quantile(gwr.model$SDF$AgEmploy), col.reg=colours, cex=0.6, main="Agriculture Employment Coefficient over Space")
+dev.off() 
+
+#Female no education: https://www.dropbox.com/s/q4l4jc147g6km29/gwrFemEdu.png?dl=0
+png("gwrFemEdu.png")
+spplot(gwr.model$SDF, "Female.No.Education", cuts=quantile(gwr.model$SDF$Female.No.Education), col.reg=colours, cex=0.6, main="Female No Education Coefficient over Space")
+dev.off()
+
+#Labor force participation: https://www.dropbox.com/s/epm4nzhfdaoaqss/gwrLaborForceParticipation.png?dl=0
+png("gwrLaborForceParticipation.png")
+spplot(gwr.model$SDF, "LaborForceParticipationRatio", cuts=quantile(gwr.model$SDF$LaborForceParticipationRatio), col.reg=colours, cex=0.6, main="Labor Force Participation Ratio Coefficient over Space")
+dev.off()
+
+#Find t-values and test significance for each variables
+gdpT <- gwr.model$SDF$GDP / gwr.model$SDF$GDP_se
+Health.SpendingT <- gwr.model$SDF$Health.Spending / gwr.model$SDF$Health.Spending_se
+AgEmployT <- gwr.model$SDF$AgEmploy / gwr.model$SDF$AgEmploy_se
+FemaleNoEduT <- gwr.model$SDF$Female.No.Education / gwr.model$SDF$Female.No.Education_se
+LaborForceT <- gwr.model$SDF$LaborForceParticipationRatio / gwr.model$SDF$LaborForceParticipationRatio_se 
+
+#Map out significance plots for the variables
+sig.mapGDP <- SpatialPointsDataFrame(map, data.frame(gdpT))
+sig.mapHealthSpending <- SpatialPointsDataFrame(map, data.frame(Health.SpendingT))
+sig.mapAgEmploy <- SpatialPointsDataFrame(map, data.frame(AgEmployT))
+sig.mapFemaleNoEdu <- SpatialPointsDataFrame(map, data.frame(FemaleNoEduT))
+sig.mapLaborForceT <- SpatialPointsDataFrame(map, data.frame(LaborForceT))
+
+#I depart from Fotheringham, Brunsdon, & Charlton (2002) in making the maps more colorblind-friendly
+colours2=c("orange", "blue", "orange")
+
+#Define significance breaks for each variable
+gdp.breaks=c(min(gdpT), -4, 4, max(gdpT))
+healthSpending.breaks=c(min(Health.SpendingT), -4, 4, max(Health.SpendingT))
+AgEmploy.breaks=c(min(AgEmployT), -4, 4, max(AgEmployT))
+FemaleNoEdu.breaks=c(min(FemaleNoEduT), -4, 4, max(FemaleNoEduT))
+LaborForce.breaks=c(min(LaborForceT), -4, 4, max(LaborForceT))
+
+#Create the maps. Blue = not significant; orange = significant.
+png("gwrGDPsig.png")
+spplot(sig.mapGDP, cuts=gdp.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is per capita PPP-adjusted GDP signficant worldwide?")
+dev.off()
+#Result: https://www.dropbox.com/s/v2cs2t9n28klcyf/gwrGDPsig.png?dl=0
+
+png("gwrHealthSpendingsig.png")
+spplot(sig.mapHealthSpending, cuts=healthSpending.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is health spending signficant worldwide?")
+dev.off()
+#Result: https://www.dropbox.com/s/17jukk9ti3tb3wd/gwrHealthSpendingsig.png?dl=0
+
+png("gwrAgEmploysig.png")
+spplot(sig.mapAgEmploy, cuts=AgEmploy.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is agriculture employment signficant worldwide?")
+dev.off()
+#Result: https://www.dropbox.com/s/39l8eqc3nuvlk5v/gwrAgEmploysig.png?dl=0
+
+png("gwrFemaleNoEdusig.png")
+spplot(sig.mapFemaleNoEdu, cuts=FemaleNoEdu.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is female no education signficant worldwide?")
+dev.off()
+#Result: https://www.dropbox.com/s/97fahsn5au6fkai/gwrFemaleNoEdusig.png?dl=0
+
+png("gwrLaborForcesig.png")
+spplot(sig.mapLaborForceT, cuts=LaborForce.breaks, col.regions=colours2, cex=c(0.6,1,0.6), main="Is labor force participation signficant worldwide?")
+dev.off()
+#Result: https://www.dropbox.com/s/itfqf87ef8wmxsn/gwrLaborForcesig.png?dl=0
