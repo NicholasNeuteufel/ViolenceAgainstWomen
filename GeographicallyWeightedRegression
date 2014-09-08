@@ -57,6 +57,10 @@ Adaptive q: 0.1931233 CV score: 19666.41
 gwr.model <- gwr(formula, data=map, adapt=bw, hatmatrix=T, se.fit=T)
 gwr.model
 
+#"Quasi-global r^2: 0.4344082" 
+#WOW! OLS was -0.02645. Improvement of 0.46! 
+#+1,642.375% increase in r^2 due to geography
+
 #Map the coefficients over space
 #GDP: https://www.dropbox.com/s/wwnsa02uesu4s3e/gwrGDP.png?dl=0
 png("gwrGDP.png")
