@@ -5,20 +5,28 @@
 library(ggmap)
 
 #Load the data: https://www.dropbox.com/s/u65h1pyom5vl0vf/DoneEmpiricalImputation.csv?dl=0
+#Real: write.csv(file="WithGPSdata-complete.csv", x=blanks)
 complete <- read.csv(file="DoneEmpiricalImputation.csv", h=T, sep=",")
+blanks <- read.csv(file="BlanksFilled.csv", h=T, sep=",")
 
 #Must have Google recognizable names in a list/vector for ggmap
 complete$Country <- as.character(complete$Country)
 complete[5, "Country"] <- "Democratic Republic of the Congo"
-countries <- complete$Country
+
+#Subset for 73 countries with lifetime IPV data 
+complete <- subset(complete, IPV.Either.Life != "NA")
+blanks$Name <- complete$Country
+
+#Create vector for ggmap's geocode function
+filled.countries <- blanks$Name
 
 #Retrieve the GPS coordinates from Google Maps of all 89 countries; returns dataframe with 
 #columns "lat" and "lon"
-gps.coords <- geocode(countries, output="latlon")
+gps.coords <- geocode(filled.countries, output="latlon")
 
 lon <- gps.coords$lon
 lat <- gps.coords$lat
-complete <- cbind(complete, lat, lon)
+blanks <- cbind(blanks, lat, lon)
 
 #Save our work
-write.csv(file="WithGPSdata.csv", x=complete)
+write.csv(file="WithGPSdata-complete.csv", x=blanks)
