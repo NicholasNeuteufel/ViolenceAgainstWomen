@@ -5,7 +5,7 @@ Project by Nicholas Neuteufel while working for Tremendous Hearts (Cape Town, So
 
 Written in R language. 
 
-Uses UN Women data (http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf) and the following R packages: randomForest, quantregForest, WDI, rworldmap, and countrycode.
+Uses UN Women data (http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf) and the following R packages: randomForest, quantregForest, WDI, rworldmap, ggmap, lattice, Hmisc, sp, spgwr, and countrycode.
 
 NEXT STEPS:
 
@@ -15,7 +15,7 @@ b) Try to get war/polity scores working. Then re-run both imputations.
 
 c) Region analysis (Statistically analyzing trends by continent and regions within continents)
 
-d) Geography-weighted regression (GWR)
+d) Geography-weighted regression (GWR) -- COMPLETE
 
 
 
