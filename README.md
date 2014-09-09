@@ -15,7 +15,7 @@ b) Try to get war/polity scores working. Then re-run both imputations.
 
 c) Region analysis (Statistically analyzing trends by continent and regions within continents)
 
-d) Geography-weighted regression (GWR) -- COMPLETE
+d) Geography-weighted regression (GWR) -- COMPLETE (http://imgur.com/a/dp53F)
 
 
 
@@ -46,7 +46,7 @@ b) Comparing empirical data to RF predicted imputation (pending C(a))
 
 *****
 
-STEP 3: Predicting key countries with missing data (with both 95% confidence and prediction intervals)
+STEP 3: Predicting key countries with missing data (with both 95% & 90% prediction intervals)
 
 No particular order:
 
