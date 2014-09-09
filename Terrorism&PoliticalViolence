@@ -99,3 +99,16 @@ write.csv(file="AsalRethemeyerTR.csv", x=turkey.groups.clean)
 write.csv(file="AsalRethemeyerIT.csv", x=italy.groups.clean)
 write.csv(file="AsalRethemeyerFR.csv", x=france.groups.clean)
 write.csv(file="AsalRethemeyerIN.csv", x=india.groups.clean)
+
+#Hypothesis 1 (H1) is that countries with stronger concentrations of terror groups have a) higher IPV, or b) more underreporting of IPV (vs expected)
+#H2 is that more religious fundamentalist concentration leads to the same (or higher than other terror groups)
+#H3 is that more strong groups (groups with territorial control) --> same
+
+#Hypothesis testing (Hs 1, 2, and 3) here:
+
+
+#H4 is that perhaps it is more terror activities and attacks are better indicators of higher IPV/higher underreporting
+
+#This will be tested with START data from the Global Terrorism Database (GTD) from 1990 to 2005 
+#CITE: National Consortium for the Study of Terrorism and Responses to Terrorism (START). (2014). Global Terrorism Database [Data file]. Retrieved from http://www.start.umd.edu/gtd
+#Codebook: http://apps.start.umd.edu/gtd/downloads/dataset/GTD_Codebook_2014Final.pdf
