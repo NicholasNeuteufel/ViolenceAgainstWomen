@@ -1,0 +1,101 @@
+#First attempt at adding political violence indicators is from 
+#Asal, Victor H. & R. Karl Rethemeyer. (2008). “The Nature of the Beast: Terrorist Organizational Characteristics and Organizational Lethality.” 
+#Journal of Politics, 70(2): 437-449. Data URL: http://www.albany.edu/pvc/data.shtml
+#My csv: https://www.dropbox.com/s/wqkhsi4fsssd2qc/terrorism_lethality.csv?dl=0
+
+terror <- read.csv(file="terrorism_lethality.csv", h=T, sep=",")
+
+#Format names and fix DRC (always giving political scientists name problems!)
+terror$cowmastercountry <- as.character(terror$cowmastercountry)
+terror[203,"cowmastercountry"] <- "Democratic Republic of Congo"
+
+#Convert names to iso2 codes, like in AnalyzingViolence. Makes it easier to subset later
+library(countrycode)
+terror$iso2 <- countrycode(sourcevar=terror$cowmastercountry, origin="country.name", destination="iso2c", warn=T)
+
+#Subset by country name 
+new.terror <- subset(terror, cowmastercountry=="Burkina Faso"|cowmastercountry=="Cameroon"|cowmastercountry=="Cape Verde"|cowmastercountry=="Ivory Coast"|cowmastercountry=="Democratic Republic of Congo"|cowmastercountry=="Egypt"|cowmastercountry=="Ethiopia"|cowmastercountry=="Ghana"|cowmastercountry=="Kenya"|cowmastercountry=="Liberia"|cowmastercountry=="Malawi"|cowmastercountry=="Morocco"|cowmastercountry=="Mozambique"|cowmastercountry=="Nigeria"|cowmastercountry=="Rwanda"|cowmastercountry=="Sao Tome and Principe"|cowmastercountry=="South Africa"|cowmastercountry=="Uganda"|cowmastercountry=="Tanzania"|cowmastercountry=="Tunisia"|cowmastercountry=="Zambia"|cowmastercountry=="Zimbabwe"|cowmastercountry=="Azerbaijan"|cowmastercountry=="Bangladesh"|cowmastercountry=="Cambodia"|cowmastercountry=="Hong Kong"|cowmastercountry=="India"|cowmastercountry=="Japan"|cowmastercountry=="Maldives"|cowmastercountry=="Nepal"|cowmastercountry=="Philippines"|cowmastercountry=="South Korea"|cowmastercountry=="Singapore"|cowmastercountry=="Thailand"|cowmastercountry=="Vietnam"|cowmastercountry=="Albania"|cowmastercountry=="Armenia"|cowmastercountry=="Belgium"|cowmastercountry=="Czech Republic"|cowmastercountry=="Denmark"|cowmastercountry=="Finland"|cowmastercountry=="France"|cowmastercountry=="Georgia"|cowmastercountry=="Germany"|cowmastercountry=="Iceland"|cowmastercountry=="Ireland"|cowmastercountry=="Italy"|cowmastercountry=="Lithuania"|cowmastercountry=="Malta"|cowmastercountry=="Norway"|cowmastercountry=="Poland"|cowmastercountry=="Portugal"|cowmastercountry=="Moldova"|cowmastercountry=="Romania"|cowmastercountry=="Romania"|cowmastercountry=="Russia"|cowmastercountry=="Slovakia"|cowmastercountry=="Sweden"|cowmastercountry=="Switzerland"|cowmastercountry=="Turkey"|cowmastercountry=="Ukraine"|cowmastercountry=="United Kingdom"|cowmastercountry=="Bolivia"|cowmastercountry=="Brazil"|cowmastercountry=="Chile"|cowmastercountry=="Colombia"|cowmastercountry=="Ecuador"|cowmastercountry=="El Salvador"|cowmastercountry=="Guatemala"|cowmastercountry=="Honduras"|cowmastercountry=="Nicaragua"|cowmastercountry=="Paraguay"|cowmastercountry=="Peru"|cowmastercountry=="Antigua and Barbuda"|cowmastercountry=="Barbados"|cowmastercountry=="Dominican Republic"|cowmastercountry=="Haiti"|cowmastercountry=="Jamaica"|cowmastercountry=="Mexico"|cowmastercountry=="Canada"|cowmastercountry=="Costa Rica"|cowmastercountry=="United States"|cowmastercountry=="Australia"|cowmastercountry=="Kiribati"|cowmastercountry=="Marshall Islands"|cowmastercountry=="New Zealand"|cowmastercountry=="Solomon Islands"|cowmastercountry=="Timor-Leste"|cowmastercountry=="Tuvalua"|cowmastercountry=="Vanuatu")
+nrow(new.terror) #180 rows
+summary(new.terror) #Learn about our data
+#No repeats of groups; see make-up of our groups (ethonationalism vs leftist v Islamic extremist v religious, etc.)
+
+#ISO2 is currently string. Create a new column of ISO2s and make that a factor.
+new.terror$ISO2 <- new.terror$iso2
+new.terror$ISO2 <- as.factor(new.terror$ISO2)
+summary(new.terror)
+#Doing that allows us to see concentration of terror groups and their characteristics in specific countries
+#See codebook here: http://www.albany.edu/pvc/lethality_paper__CodeBook.pdf
+
+#Full count of the number of terror groups based within a specific country
+table(new.terror$ISO2)
+
+india.groups <- subset(new.terror, ISO2=="IN")
+india.groups.clean <- subset(india.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(india.groups.clean)
+#India's terror groups (1998-2005; as recorded by Asal & Rethemeyer) tend to be old (median age 11.5, mean 15.43)
+#They tend to be ethno-nationalist (dichotomous variable of 0/1; median 1, mean 0.7333)
+#Very rarely religious (dichot; median 0, mean 0.2) and Islamist (dichot; median 0, mean 0.1667)
+#Very rarely control territory (dichot; mean 0.1667; median 0)
+
+italy.groups <- subset(new.terror, ISO2=="IT")
+italy.groups.clean <- subset(italy.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(italy.groups.clean)
+#No territory control; no Islamist component; much more leftist
+
+france.groups <- subset(new.terror, ISO2=="FR")
+france.groups.clean <- subset(france.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(france.groups.clean)
+
+turkey.groups <- subset(new.terror, ISO2=="TR")
+turkey.groups.clean <- subset(turkey.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(turkey.groups.clean)
+
+greatBritain.groups <- subset(new.terror, ISO2=="GB")
+greatBritaingroups.clean <- subset(greatBritain.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(greatBritaingroups.clean)
+
+colombia.groups <- subset(new.terror, ISO2=="CO")
+colombia.groups.clean <- subset(colombia.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(colombia.groups.clean)
+
+russia.groups <- subset(new.terror, ISO2=="RU")
+russia.groups.clean <- subset(russia.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(russia.groups.clean)
+
+bangladesh.groups <- subset(new.terror, ISO2=="BD")
+bangladesh.groups.clean <- subset(bangladesh.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(bangladesh.groups.clean)
+
+mexico.groups <- subset(new.terror, ISO2=="MX")
+mexico.groups.clean <- subset(mexico.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(mexico.groups.clean)
+
+ecuador.groups <- subset(new.terror, ISO2=="EC")
+ecuador.groups.clean <- subset(ecuador.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(ecuador.groups.clean)
+
+philippines.groups <- subset(new.terror, ISO2=="PH")
+philippines.groups.clean <- subset(philippines.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(philippines.groups.clean)
+
+south.africa.groups <- subset(new.terror, ISO2=="ZA")
+south.africa.groups.clean <- subset(south.africa.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(south.africa.groups.clean)
+
+egypt.groups <- subset(new.terror, ISO2=="EG")
+egypt.groups.clean <- subset(egypt.groups, select=-c(mastertccode3606, ISO2, iso2, masterccode))
+summary(egypt.groups.clean)
+
+#Save the work
+write.csv(file="AsalRethemeyerMX.csv", x=mexico.groups.clean)
+write.csv(file="AsalRethemeyerPH.csv", x=philippines.groups.clean)
+write.csv(file="AsalRethemeyerEC.csv", x=ecuador.groups.clean)
+write.csv(file="AsalRethemeyerEG.csv", x=egypt.groups.clean)
+write.csv(file="AsalRethemeyerZA.csv", x=south.africa.groups.clean)
+write.csv(file="AsalRethemeyerBD.csv", x=bangladesh.groups.clean)
+write.csv(file="AsalRethemeyerRU.csv", x=russia.groups.clean)
+write.csv(file="AsalRethemeyerGB.csv", x=greatBritaingroups.clean)
+write.csv(file="AsalRethemeyerTR.csv", x=turkey.groups.clean)
+write.csv(file="AsalRethemeyerIT.csv", x=italy.groups.clean)
+write.csv(file="AsalRethemeyerFR.csv", x=france.groups.clean)
+write.csv(file="AsalRethemeyerIN.csv", x=india.groups.clean)
