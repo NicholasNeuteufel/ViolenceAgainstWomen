@@ -109,6 +109,9 @@ dev.off()
 
 #Link to image: https://www.dropbox.com/s/xbytxmbzgquqsrw/MissingDotchart--95PItitle.png?dl=0
 
-#Map it
-
-library(rworldmap)
+#Variable importance plot: https://www.dropbox.com/s/rlb4zldf03k5otq/VarImpPlotv1-0.png?dl=0
+library(randomForest)
+RF <- randomForest(formula, data=sample.data, ntree=1000, importance=T, corr.bias=T)
+png("VarImpPlotv1-0.png")
+varImpPlot(RF, sort=T, main="Variable Importance, v1.0 of #ViolenceAgainstWomen model (Nick Neuteufel)")
+dev.off()
