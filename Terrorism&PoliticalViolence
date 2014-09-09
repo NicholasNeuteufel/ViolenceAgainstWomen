@@ -105,6 +105,9 @@ write.csv(file="AsalRethemeyerIN.csv", x=india.groups.clean)
 #H3 is that more strong groups (groups with territorial control) --> same
 
 #Hypothesis testing (Hs 1, 2, and 3) here:
+-
+-
+-
 
 
 #H4 is that perhaps it is more terror activities and attacks are better indicators of higher IPV/higher underreporting
@@ -112,3 +115,10 @@ write.csv(file="AsalRethemeyerIN.csv", x=india.groups.clean)
 #This will be tested with START data from the Global Terrorism Database (GTD) from 1990 to 2005 
 #CITE: National Consortium for the Study of Terrorism and Responses to Terrorism (START). (2014). Global Terrorism Database [Data file]. Retrieved from http://www.start.umd.edu/gtd
 #Codebook: http://apps.start.umd.edu/gtd/downloads/dataset/GTD_Codebook_2014Final.pdf
+
+#Hardcoded GTD country ID numbers to countries with complete data
+#Input terror attacks/incidents data from 1990 to 2005 also
+#Links: [forthcoming]
+
+countries <- read.csv(file="WithGPSdata-completeWithGTD.csv", h=T, sep=",")
+incidents <- read.csv(file="gtd1990to2005.csv", h=T, sep=",")
