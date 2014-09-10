@@ -1,0 +1,31 @@
+#New indicators for v1.2 
+library(WDI)
+library(countrycode)
+
+#Using already filled data with lifetime IPV as the response variable
+#Link: https://www.dropbox.com/s/4kpzaa5ttbuceh3/WithGPSdata-complete.csv?dl=0
+data <- read.csv(file="WithGPSdata-complete.csv", h=T, sep=",")
+
+data$iso2 <- countrycode(sourcevar=data$Name, origin="country.name", destination="iso2c", warn=T)
+
+#Droughts, floods, extreme temperatures (% of population, average 1990-2009)
+drought <- WDI(country=data$iso2, indicator="EN.CLC.MDAT.ZS", start=2009, end=2009, extra=F, cache=NULL)
+
+summary(drought) #5 NAs: Zimbabwe, Tuvalu, Malta, Iceland, and Barbados
+
+#Using 2005 population and PreventionWeb data; these are under-estimates (only droughts + floods, no extreme weather)
+drought[73,"EN.CLC.MDAT.ZS"] <- 531886/12571000 #Zimbabwe
+drought[31,"EN.CLC.MDAT.ZS"] <- 562/297000 #Iceland
+drought[64,"EN.CLC.MDAT.ZS"] <- 27/10837 #Tuvalu
+drought[8, "EN.CLC.MDAT.ZS"] <- 346/268792 #Malta
+
+#There are no data available for Malta; I will use an unweighted average
+drought[44, "EN.CLC.MDAT.ZS"] <- mean(drought$EN.CLC.MDAT.ZS, na.rm=T)
+
+#Compile drought to main dataframe
+data$drought <- drought$EN.CLC.MDAT.ZS
+
+#Got corruption to work! "Control of Corruption: Percentile Rank"
+corrupt <- WDI(country=data$iso2, indicator="CC.PER.RNK", start=2010, end=2010, extra=F, cache=NULL)
+summary(corrupt$CC.PER.RNK) #No NAs!
+data$corrupt <- corrupt$CC.PER.RNK
