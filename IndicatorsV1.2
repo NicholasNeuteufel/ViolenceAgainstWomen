@@ -29,3 +29,6 @@ data$drought <- drought$EN.CLC.MDAT.ZS
 corrupt <- WDI(country=data$iso2, indicator="CC.PER.RNK", start=2010, end=2010, extra=F, cache=NULL)
 summary(corrupt$CC.PER.RNK) #No NAs!
 data$corrupt <- corrupt$CC.PER.RNK
+
+#Save work
+write.csv(file="FilledWithDroughtAndCorruption.csv", x=data)
