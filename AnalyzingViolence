@@ -67,12 +67,6 @@ PoliticalStability <- WDI(country=new.total$ISO2, indicator="GV.POLI.ST.ES", sta
 #Political Stability and Absence of Violence/Terrorism: Percentile Rank
 PoliticalStabilityAbsenceViolence <- WDI(country=new.total$ISO2, indicator="PV.PER.RNK", start=2010, end=2010, extra=F, cache=NULL)
 
-#Control of Corruption: Percentile Rank
-CorruptionControl <- WDI(country=new.total$ISO2, indicator="CC.PER.RNK", start=2010, end=2010, extra=F, cache=NULL)
-
-#Corruption Perceptions Index (rank)
-CorruptionPerception <- WDI(country=new.total$ISO2, indicator="GV.TI.RANK.IDX", start=2010, end=2010, extra=F, cache=NULL)
-
 #End non-working scores
 
 #Next task is to add the data to UN-Women data
