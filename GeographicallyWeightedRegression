@@ -244,3 +244,42 @@ anova(gwr.model)
 #OLS Residuals    6.000 16354.3                
 #GWR Improvement 18.845  6670.3  353.95        
 #GWR Residuals   48.155  9684.0  201.10  1.7601
+
+#Test for spatial auto-correlation
+#Simple approach
+vaw.dists <- as.matrix(dist(cbind(blanks$lon, blanks$lat)))
+vaw.dists.inv <- 1/vaw.dists
+diag(vaw.dists.inv) <- 0
+Moran.I(blanks$GDP, vaw.dists.inv)
+#Can't reject null hypothesis ("the attribute being analyzed is randomly distributed among the features in your study area; 
+#said another way, the spatial processes promoting the observed pattern of values is random chance") 
+#Cite: http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html#//005p0000000t000000 
+#because we have a p-value of 0.198
+
+Moran.I(blanks$Female.No.Education, vaw.dists.inv)
+#P-value of 0.7652949 means same thing for no education of women
+Moran.I(blanks$LaborForceParticipationRatio, vaw.dists.inv)
+#Same with labor force participation
+Moran.I(blanks$Health.Spending, vaw.dists.inv)
+#And health spending (p: 0.685...)
+
+#However, the response variable has an extremely low p-value and a positive z-score
+Moran.I(blanks$IPV.Either.Life, vaw.dists.inv)
+#$observed
+#[1] 0.08799576
+#$expected
+#[1] -0.01388889
+#$sd
+#[1] 0.02530884
+#$p.value
+#[1] 5.681706e-05
+#This means that "You may reject the null hypothesis. The spatial distribution of high values and/or low values in the dataset 
+#is more spatially clustered than would be expected if underlying spatial processes were random.
+
+#More accurate distances attempt--leads to errors
+library(geosphere)
+coordinates <- cbind(blanks$lon, blanks$lat)
+matrix <- distm(coordinates, fun=distVincentyEllipsoid)
+summary(matrix) #There is an NA in matrix[7,72]
+matrix[7,72] <- mean(matrix[,72], na.rm=T) #Just use the unweighted average of the rest of the distances
+#Returns error. May try to fix later.
