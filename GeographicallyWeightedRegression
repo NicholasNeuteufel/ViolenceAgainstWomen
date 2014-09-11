@@ -247,6 +247,8 @@ anova(gwr.model)
 
 #Test for spatial auto-correlation
 #Simple approach
+library(ape)
+
 vaw.dists <- as.matrix(dist(cbind(blanks$lon, blanks$lat)))
 vaw.dists.inv <- 1/vaw.dists
 diag(vaw.dists.inv) <- 0
@@ -273,8 +275,8 @@ Moran.I(blanks$IPV.Either.Life, vaw.dists.inv)
 #[1] 0.02530884
 #$p.value
 #[1] 5.681706e-05
-#This means that "You may reject the null hypothesis. The spatial distribution of high values and/or low values in the dataset 
-#is more spatially clustered than would be expected if underlying spatial processes were random.
+#This means that "You may reject the null hypothesis. The spatial distribution of high values and/or low values 
+#in the dataset is more spatially clustered than would be expected if underlying spatial processes were random."
 
 #More accurate distances attempt--leads to errors
 library(geosphere)
@@ -282,4 +284,5 @@ coordinates <- cbind(blanks$lon, blanks$lat)
 matrix <- distm(coordinates, fun=distVincentyEllipsoid)
 summary(matrix) #There is an NA in matrix[7,72]
 matrix[7,72] <- mean(matrix[,72], na.rm=T) #Just use the unweighted average of the rest of the distances
+Moran.I(blanks$IPV.Either.Life, matrix)
 #Returns error. May try to fix later.
