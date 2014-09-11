@@ -5,23 +5,27 @@ Project by Nicholas Neuteufel while working for Tremendous Hearts (Cape Town, So
 
 Written in R language. 
 
-Uses UN Women data (http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf) and the following R packages: randomForest, quantregForest, WDI, rworldmap, ggmap, lattice, Hmisc, sp, spgwr, and countrycode.
+Uses UN Women data (http://www.endvawnow.org/uploads/browser/files/vawprevalence_matrix_june2013.pdf) and the following R packages: randomForest, quantregForest, WDI, rworldmap, ggmap, lattice, Hmisc, sp, spgwr, ape, and countrycode.
 
 NEXT STEPS:
 
 a) Political, conflict, and cultural indicators
 
-b) Try to get war/polity scores working. Then re-run both imputations.
-
-c) Region analysis (Statistically analyzing trends by continent and regions within continents)
-
-d) Geography-weighted regression (GWR) -- COMPLETE (http://imgur.com/a/dp53F)
-
-
-
-VERSION 1.0
+b) Try to get war/polity scores working.
 
 *****
+
+VERSION 1.2
+
+Extreme weather (drought/flooding) and corruption control data added.
+
+VERSION 1.1
+
+Geography-weighted regression (GWR) -- COMPLETE (http://imgur.com/a/dp53F)
+-Including spatial autocorellation (Moran's I) analysis
+Region analysis (Statistically analyzing trends by continent and regions within continents)
+
+VERSION 1.0
 
 STEP 1: Mapping Out Violence (see Mapping) -- COMPLETE 
 
