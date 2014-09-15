@@ -1,0 +1,94 @@
+#Using Bayesian additive regression trees (BART) to predict prevalence rates of violence 
+#against women worldwide. Original BART paper is Chipman, George, & McCulloch (2008).
+#URL: http://www-old.newton.ac.uk/preprints/NI09002.pdf
+#I will use the R package bartMachine by Kapelner & Bleich (2013?)
+#URL: http://cran.r-project.org/web/packages/bartMachine/vignettes/bartMachine_vignette.pdf
+
+library(bartMachine)
+
+#Read data with v1.2 variables
+#Link: https://www.dropbox.com/s/yfmufbni32ox25b/FilledWithDroughtAndCorruption.csv?dl=0
+data <- read.csv(file="FilledWithDroughtAndCorruption.csv", h=T, sep=",")
+
+#Set seed for reproducible results
+set.seed(12)
+
+attach(data)
+
+#Make dataframes and vector for bartMachine. #1 is without GPS data; #2 is with.
+predictors1 <- cbind(GDP, Health.Spending, AgEmploy, Female.No.Education, LaborForceParticipationRatio, drought, corrupt)
+predictors2 <- cbind(GDP, Health.Spending, AgEmploy, Female.No.Education, LaborForceParticipationRatio, drought, corrupt, lat, lon)
+predictors1 <- data.frame(predictors1)
+predictors2 <- data.frame(predictors2)
+response <- IPV.Either.Life
+y <- response #Must be named "y" for bartMachine
+both1 <- cbind(predictors1, y)
+both2 <- cbind(predictors2, y)
+
+#BART model fitting is quite an intensive process. I give R more processing room to work with. 
+#My laptop is quad-core (2.60 GHz) with 8.0 GB of RAM; I am running Windows 8.1.
+#Even for my workhorse laptop, it takes at least 15 minutes.
+set_bart_machine_memory(5000)
+#Java initialized with 4.66GB maximum memory.
+set_bart_machine_num_cores(4)
+#bartMachine now using 4 cores.
+
+#Create the BART models, selecting the parameters using cross-validation. 
+cv.model1 <- bartMachineCV(X=predictors1, y=response, Xy=both1, num_tree_cv=c(50,100,200,500,1000), k_cvs=c(2,3,5,10,20), nu_q_cvs=list(c(3,0.9), c(3,0.99), c(10,0.75)), k_folds=5, verbose=T)
+#>100 lines of a bunch of crap THEN
+#bartMachine initializing with 500 trees...
+#Now building bartMachine for regression ...
+#evaluating in sample data...done
+
+#Not going to do verbose=T for model2
+cv.model2 <- bartMachineCV(X=predictors2, y=response, Xy=both2, num_tree_cv=c(50,100,200,500,1000), k_cvs=c(2,3,5,10,20), nu_q_cvs=list(c(3,0.9), c(3,0.99), c(10,0.75)), k_folds=5, verbose=F)
+
+#Learn about how good the models are
+
+summary(cv.model1)
+#bartMachine v1.0.2 for regression
+#
+#training data n = 73 and p = 7 
+#built in 4 secs on 4 cores, 500 trees, 250 burn-in and 1000 post. samples
+#
+#sigsq est for y beforehand: 225.778 
+#avg sigsq estimate after burn-in: 236.3503 
+#
+#in-sample statistics:
+# L1 = 897.67 
+# L2 = 17116.71 
+# rmse = 15.31 
+# Pseudo-Rsq = 3e-04
+#p-val for shapiro-wilk test of normality of residuals: 0.02665 
+#p-val for zero-mean noise: 0.29372 
+
+summary(cv.model2)
+#bartMachine v1.0.2 for regression
+#
+#training data n = 73 and p = 9 
+#built in 0.4 secs on 4 cores, 50 trees, 250 burn-in and 1000 post. samples
+#
+#sigsq est for y beforehand: 173.695 
+#avg sigsq estimate after burn-in: 156.30298 
+#
+#in-sample statistics:
+# L1 = 623.02 
+# L2 = 8522.04 
+# rmse = 10.8 
+# Pseudo-Rsq = 0.5023
+#p-val for shapiro-wilk test of normality of residuals: 0.04185 
+#p-val for zero-mean noise: 0.95684
+
+#Differences in pseudo-Rsq and RMSE are ENORMOUS; geography makes the difference here.
+#Since BART models use up so much RAM, I'll delete the non-gegraphic cv.model1
+destroy_bart_machine(cv.model1)
+
+#See which variables matter most
+png("bartVarImportance.png")
+investigate_var_importance(cv.model2, num_replicates_for_avg=100)
+#....................................................................................................
+dev.off()
+#windows 
+#      2 
+dev.off()
+#Saved as PNG; link: https://www.dropbox.com/s/jrzc4hrsvlblvzx/bartVarImportance.png?dl=0
