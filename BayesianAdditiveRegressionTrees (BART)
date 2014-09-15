@@ -92,3 +92,59 @@ dev.off()
 #      2 
 dev.off()
 #Saved as PNG; link: https://www.dropbox.com/s/jrzc4hrsvlblvzx/bartVarImportance.png?dl=0
+
+#See RMSE by number of trees
+rmse_by_num_trees(cv.model2, tree_list=c(5, seq(10, 50, 10), 100, 150, 200, 500, 750, 1000), in_sample=F, plot=T, holdout_pctg=0.2, num_replicates=5)
+
+#Using default paramters (non-CV BART model)
+non.cv.model <- bartMachine(X=predictors2, y= response, Xy=both2, num_trees=1000, num_burn_in=250, num_iterations_after_burn_in=1000, alpha=0.95, beta=2, k=2, q=0.9, nu=3, run_in_sample=T, s_sq_y="mse")
+#bartMachine initializing with 1000 trees...
+#Now building bartMachine for regression ...
+#evaluating in sample data...done
+
+summary(non.cv.model)
+
+#bartMachine v1.0.2 for regression
+#
+#training data n = 73 and p = 9 
+#built in 7.9 secs on 4 cores, 1000 trees, 250 burn-in and 1000 post. samples
+#
+#sigsq est for y beforehand: 173.695 
+#avg sigsq estimate after burn-in: 155.75492 
+#
+#in-sample statistics:
+# L1 = 617.93 
+# L2 = 8430.22 
+# rmse = 10.75 
+# Pseudo-Rsq = 0.5076
+#p-val for shapiro-wilk test of normality of residuals: 0.02433 
+#p-val for zero-mean noise: 0.94551 
+
+png("bartVarImportanceNonCV.png")
+investigate_var_importance(non.cv.model, num_replicates_for_avg=100)
+#....................................................................................................
+dev.off()
+
+#The best thing I've seen a long time
+
+non.cv.model1 <- bartMachine(X=predictors2, y=response, Xy=both2, num_trees=1000, num_burn_in=250, num_iterations_after_burn_in=1000, alpha=0.95, beta=2, k=1, q=0.9, nu=3, run_in_sample=T, s_sq_y="mse")
+#bartMachine initializing with 1000 trees...
+#Now building bartMachine for regression ...
+#evaluating in sample data...done
+
+summary(non.cv.model1)
+#bartMachine v1.0.2 for regression
+#
+#training data n = 73 and p = 9 
+#built in 11.5 secs on 4 cores, 1000 trees, 250 burn-in and 1000 post. samples
+#
+#sigsq est for y beforehand: 173.695 
+#avg sigsq estimate after burn-in: 86.21823 
+#
+#in-sample statistics:
+# L1 = 323.59 
+# L2 = 2307.34 
+# rmse = 5.62 
+# Pseudo-Rsq = 0.8652
+#p-val for shapiro-wilk test of normality of residuals: 0.0652 
+#p-val for zero-mean noise: 0.982 
