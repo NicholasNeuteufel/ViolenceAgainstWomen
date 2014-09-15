@@ -2,30 +2,7 @@
 
 library(WDI)
 library(countrycode)
-library(quantregForest)
 
-#Download post-imputation data to train the quantile regression forest
-#Download: https://www.dropbox.com/s/ngk0wdjimoyjhxo/BlanksFilled.csv?dl=0
-#Read paper: N. Meinshausen (2006) "Quantile Regression Forests", Journal of Machine Learning Research 7, 983-999. 
-#Link: http://jmlr.csail.mit.edu/papers/v7/
-
-sample.data <- read.csv(file="FilledWithDroughtAndCorruption.csv", h=T, sep=",")
-
-predictors.sample <- cbind(sample.data$GDP, sample.data$Health.Spending, sample.data$AgEmploy, sample.data$Female.No.Education, sample.data$LaborForceParticipationRatio, sample.data$drought, sample.data$corrupt)
-response.sample <- sample.data$IPV.Either.Life
-QRF <- quantregForest(x=predictors.sample, y=response.sample, nodesize=10, ntree=1000)
-
-#plot automatically makes a nice graphic with 90% PIs
-plot(QRF)
-#Link: https://www.dropbox.com/s/l3pb5qmexydwlgk/QRF%20on%20out-of-bag%20data.png?dl=0
-#Link2: https://www.dropbox.com/s/l72onl8f620kskz/QRF1-2.png?dl=0
-
-#Cross-validate QRF for the sample countries. Going for fits and bounds of the 95% prediction intervals.
-out.of.bag <- predict(QRF, newdata=NULL, quantiles=c(0.025, 0.5, 0.975))
-
-***STILL NEEDED FOR v1.2***
-
-#Now for the novelty statistics
 #Come up with list
 missing.names <- c("China", "South Korea", "Saudi Arabia", "Iran", "Iraq", "Indonesia", "Pakistan", "Argentina", "South Africa", "Spain", "France")
 
@@ -67,54 +44,3 @@ WDIdata[8, "SH.STA.ANVC.ZS"] <- 93
 
 #Bind them for prediction/test data
 missing.predictors <- cbind(WDIdata$NY.GDP.PCAP.PP.CD, WDIdata$SH.XPD.TOTL.ZS, WDIdata$SL.AGR.EMPL.ZS, WDIdata$BAR.NOED.15UP.FE.ZS, WDIdata$SL.TLF.CACT.FM.ZS)
-
-#Apply the QRF to the missing countries
-missingPredict95 <- predict(QRF, newdata=missing.predictors, quantiles=c(0.025, 0.5, 0.975))
-missingPredict90 <- predict(QRF, newdata=missing.predictors, quantiles=c(0.05, 0.5, 0.95))
-
-lower95 <- missingPredict95[,1]
-fit95 <- missingPredict95[,2]
-upper95 <- missingPredict95[,3]
-
-lower90 <- missingPredict90[,1]
-fit90 <- missingPredict90[,2]
-upper90 <- missingPredict90[,3]
-
-missingStates90 <- data.frame(Name = missing.names, ISO2=WDIdata$iso2c, Lower = lower90, Fit = fit90, Upper = upper90)
-missingStates95 <- data.frame(Name = missing.names, ISO2=WDIdata$iso2c, Lower = lower95, Fit = fit95, Upper = upper95)
-
-#Save it
-write.csv(file="PI90.csv", x=missingStates90)
-write.csv(file="PI95.csv", x=missingStates95)
-
-#Plot it; inspired by Jay Ulfelder's dotcharts for coup probabilities
-#See here: https://github.com/NicholasNeuteufel/dart-throwing-chimp/blob/master/coup.forecasts.2014.R
-library(Hmisc)
-
-#90 percent prediction interval (PI)
-#I renamed missingStates90 "d90" and etc ("d95")
-png(file="MissingDotchart--90PItitle.png", width=14, height=18, units="cm", bg="white", res=150)
-dotchart2(d90$Lower, labels=d90$Name, lines=T, lwd=0.05, lty=3, col="gray", xlab="Predicted percent of women (90% prediction interval)", xlim=c(0,100))
-dotchart2(d90$Fit, labels=d90$Name, lines=T, lwd=0.05, lty=3, col="firebrick", xlim=c(0,100), add=T)
-dotchart2(d90$Upper, labels=d90$Name, lines=T, lwd=0.05, lty=3, col="gray", xlim=c(0,100), add=T)
-title(main="Predicting IPV worldwide", cex=1) 
-dev.off()
-
-#Link to chart: https://www.dropbox.com/s/azh17yb8dr0hsq7/MissingDotchart--90PItitle.png?dl=0
-
-#95 PI
-png(file="MissingDotchart--95PItitle.png", width=14, height=18, units="cm", bg="white", res=150)
-dotchart2(d95$Lower, labels=d95$Name, lines=T, lwd=0.05, lty=3, col="gray", xlab="Predicted percent of women (95% prediction interval)", xlim=c(0,100))
-dotchart2(d95$Fit, labels=d95$Name, lines=T, lwd=0.05, lty=3, col="firebrick", xlim=c(0,100), add=T)
-dotchart2(d95$Upper, labels=d95$Name, lines=T, lwd=0.05, lty=3, col="gray", xlim=c(0,100), add=T)
-title(main="Predicting IPV worldwide", cex=1) 
-dev.off()
-
-#Link to image: https://www.dropbox.com/s/xbytxmbzgquqsrw/MissingDotchart--95PItitle.png?dl=0
-
-#Variable importance plot: https://www.dropbox.com/s/rlb4zldf03k5otq/VarImpPlotv1-0.png?dl=0
-library(randomForest)
-RF <- randomForest(formula, data=sample.data, ntree=1000, importance=T, corr.bias=T)
-png("VarImpPlotv1-0.png")
-varImpPlot(RF, sort=T, main="Variable Importance, v1.0 of #ViolenceAgainstWomen model (Nick Neuteufel)")
-dev.off()
