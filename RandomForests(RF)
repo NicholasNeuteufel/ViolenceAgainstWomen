@@ -7,27 +7,15 @@ library(quantregForest)
 
 sample.data <- read.csv(file="FilledWithDroughtAndCorruption.csv", h=T, sep=",")
 
-predictors.sample <- cbind(sample.data$GDP, sample.data$Health.Spending, sample.data$AgEmploy, sample.data$Female.No.Education, sample.data$LaborForceParticipationRatio, sample.data$drought, sample.data$corrupt)
+predictors.sample <- cbind(sample.data$GDP, sample.data$Health.Spending, sample.data$AgEmploy, sample.data$Female.No.Education, sample.data$LaborForceParticipationRatio, sample.data$drought, sample.data$corrupt, sample.data$lat, sample.data$lon)
 response.sample <- sample.data$IPV.Either.Life
 QRF <- quantregForest(x=predictors.sample, y=response.sample, nodesize=10, ntree=1000)
 
 #plot automatically makes a nice graphic with 90% PIs
 plot(QRF)
-#Link: https://www.dropbox.com/s/l3pb5qmexydwlgk/QRF%20on%20out-of-bag%20data.png?dl=0
-#Link2: https://www.dropbox.com/s/l72onl8f620kskz/QRF1-2.png?dl=0
 
 #Cross-validate QRF for the sample countries. Going for fits and bounds of the 95% prediction intervals.
 out.of.bag <- predict(QRF, newdata=NULL, quantiles=c(0.025, 0.5, 0.975))
-
-
-
-
-
-
-
-
-
-
 
 
 
